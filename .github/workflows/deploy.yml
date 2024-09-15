@@ -1,0 +1,43 @@
+name: Deploy Chit Chat to EC2
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code từ GitHub repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Cài đặt Node.js để build ứng dụng
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      # Step 3: Cài đặt các dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Build ứng dụng React
+      - name: Build the app
+        run: npm run build
+
+      # Step 5: Thiết lập SSH để kết nối đến EC2
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # Step 6: Copy build files lên EC2
+      - name: Copy files via SCP
+        run: scp -r ./build/* ec2-user@your-ec2-public-ip:/var/www/html
+
+      # Step 7: SSH vào EC2 để khởi động lại Nginx (nếu cần)
+      - name: Restart Nginx
+        run: ssh ec2-user@your-ec2-public-ip 'sudo systemctl restart nginx'
