@@ -20,24 +20,28 @@ jobs:
         with:
           node-version: "16"
 
-      # Step 3: Cài đặt các dependencies
+      # Step 3: Cài đặt Yarn
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # Step 4: Cài đặt các dependencies
       - name: Install dependencies
-        run: npm ci
+        run: yarn install
 
-      # Step 4: Build ứng dụng React
+      # Step 5: Build ứng dụng React
       - name: Build the app
-        run: npm run build
+        run: yarn build
 
-      # Step 5: Thiết lập SSH để kết nối đến EC2
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      # # Step 6: Thiết lập SSH để kết nối đến EC2
+      # - name: Add SSH key
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      # Step 6: Copy build files lên EC2
-      - name: Copy files via SCP
-        run: scp -r ./build/* ec2-user@your-ec2-public-ip:/var/www/html
+      # # Step 7: Copy build files lên EC2
+      # - name: Copy files via SCP
+      #   run: scp -r ./build/* ec2-user@your-ec2-public-ip:/var/www/html
 
-      # Step 7: SSH vào EC2 để khởi động lại Nginx (nếu cần)
-      - name: Restart Nginx
-        run: ssh ec2-user@your-ec2-public-ip 'sudo systemctl restart nginx'
+      # # Step 8: SSH vào EC2 để khởi động lại Nginx (nếu cần)
+      # - name: Restart Nginx
+      #   run: ssh ec2-user@your-ec2-public-ip 'sudo systemctl restart nginx'
