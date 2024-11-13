@@ -1,1 +1,1 @@
-export const apiBaseUrl = import.meta.env.VITE_API_ENDPOINT;
+export const apiBaseUrl = "https://18.138.250.74/api";
