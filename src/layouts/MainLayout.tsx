@@ -9,7 +9,9 @@ function MainLayout() {
       <div className="relative">
         <SideBarExpandedContent />
       </div>
-      <Outlet />
+      <div className="w-full overflow-auto">
+        <Outlet />
+      </div>
     </div>
   );
 }

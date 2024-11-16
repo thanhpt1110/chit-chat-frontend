@@ -9,7 +9,10 @@ export type GlobalState = {
 
 const initialState: GlobalState = {
   userInfo: {
-    name: "",
+    displayName: "Thanh Tuan",
+    username: "lttuan_",
+    avatarUrl:
+      "https://i.pinimg.com/736x/5d/c5/62/5dc562fd84db2353f567799f1e5502b1.jpg",
   },
   sideBarExpandedContent: null,
 };

@@ -1,0 +1,55 @@
+.carousel-container {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-image {
+  min-width: 100%;
+  object-fit: cover;
+}
+
+.carousel-buttons {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 10px; /* Cách đáy của slider 10px */
+  left: 50%; /* Đặt phần tử vào giữa theo chiều ngang */
+  transform: translateX(-50%); /* Dịch chuyển phần tử về chính giữa */
+  display: flex;
+  justify-content: center;
+  gap: 8px; /* Khoảng cách giữa các dots */
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #d3d3d3; /* Màu inactive */
+  border: none;
+  cursor: pointer;
+}
+
+.dot-active {
+  @apply bg-white opacity-50;
+}
+
+.dot-inactive {
+  @apply bg-gray-600 opacity-50;
+}

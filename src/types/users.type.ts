@@ -1,5 +1,7 @@
 export type UserInfo = {
-  name: string;
+  displayName: string;
+  username: string;
+  avatarUrl: string;
 };
 
 export type UserRES = {
