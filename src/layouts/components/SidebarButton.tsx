@@ -6,6 +6,7 @@ type SidebarButtonProps = {
   onClick: () => void;
   isExpanded: boolean;
   isActive: boolean;
+  activeIcon: React.ReactNode;
 };
 
 function SidebarButton({
@@ -14,6 +15,7 @@ function SidebarButton({
   onClick,
   isExpanded,
   isActive = false,
+  activeIcon,
 }: SidebarButtonProps) {
   return (
     <div className="w-full px-2">
@@ -24,11 +26,12 @@ function SidebarButton({
           isActive && "bg-gray-100"
         )}
       >
-        {icon}
+        {isActive ? activeIcon : icon}
         <span
           className={twMerge(
             "ml-4 font-normal text-base",
-            !isExpanded && "hidden"
+            !isExpanded && "hidden",
+            isActive && "font-bold"
           )}
         >
           {title}

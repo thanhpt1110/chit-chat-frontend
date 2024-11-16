@@ -13,3 +13,7 @@ html {
   width: "100%";
   height: "100%";
 }
+
+.default-icon {
+  @apply w-5 h-5;
+}

@@ -24,7 +24,7 @@ export const syncAccessTokenThunk = createAsyncThunk<void, void>(
   "auth/sync-access-token",
   (_, { dispatch }) => {
     const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
+    if (!accessToken) {
       dispatch(setIsAuthenticated(true));
     } else {
       dispatch(setIsAuthenticated(false));

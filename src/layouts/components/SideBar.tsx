@@ -18,6 +18,8 @@ function SideBar() {
 
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
   const handleSideBarItemSelect = useCallback(
     (index: number, title: SIDEBAR_TITLE) => {
       setActivedIndex(index);
@@ -50,10 +52,8 @@ function SideBar() {
           break;
       }
     },
-    [navigate]
+    [dispatch, navigate]
   );
-
-  const dispatch = useAppDispatch();
 
   const handleLogout = useCallback(() => {
     dispatch(logoutThunk());
@@ -69,13 +69,18 @@ function SideBar() {
       <div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full h-12 flex flex-row items-center justify-center overflow-hidden"
+          className="w-full py-4 flex flex-row items-center justify-center overflow-hidden"
         >
-          {isExpanded ? "Collapse" : "Expand"}
+          {isExpanded ? (
+            <img className="w-48" src="/ChitChatLong.svg" />
+          ) : (
+            <img className="w-12" src="/ChitChat.svg" />
+          )}
         </button>
 
         {SIDEBAR_LAYOUT.map((item, index) => (
           <SidebarButton
+            activeIcon={item.activeIcon}
             isActive={activedIndex === index}
             isExpanded={isExpanded}
             key={index}

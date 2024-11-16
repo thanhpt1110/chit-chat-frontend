@@ -11,13 +11,6 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       open: true,
-      proxy: {
-        "/api": {
-          target: "http://18.138.250.74",
-          changeOrigin: true,
-          secure: false,
-        },
-      },
     },
   };
 });
