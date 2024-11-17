@@ -82,6 +82,7 @@ function MessagesPage() {
             key: "1",
             url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
           },
+          userDisplayName: "Tuan Le",
         }}
         conversationId={selectedMessageId}
       />
