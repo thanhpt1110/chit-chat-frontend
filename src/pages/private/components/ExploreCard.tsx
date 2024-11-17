@@ -5,12 +5,7 @@ type ExploreCardProps = {
   className?: string;
 } & ExploreItemInListDTO;
 
-function ExploreCard({
-  postImage,
-  likeCount,
-  commentCount,
-  className,
-}: ExploreCardProps) {
+function ExploreCard({ postImage, likeCount, commentCount }: ExploreCardProps) {
   return (
     <div
       className="bg-black max-w-80 relative group"
