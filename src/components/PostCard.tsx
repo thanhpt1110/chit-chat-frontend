@@ -11,8 +11,9 @@ import UserNameDisplay from "./UserNameDisplay";
 
 type PostCardProps = {
   postData: PostDTO;
+  onCommentClick?: () => void;
 };
-function PostCard({ postData }: PostCardProps) {
+function PostCard({ postData, onCommentClick }: PostCardProps) {
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const handleToggleLike = useCallback(() => {}, []);
@@ -49,7 +50,9 @@ function PostCard({ postData }: PostCardProps) {
             likeControlFromParent={isLiked}
             handleToggleLike={handleToggleLike}
           />
-          <CommentOutlineIcon className="cursor-pointer hover:opacity-50" />
+          <button onClick={onCommentClick}>
+            <CommentOutlineIcon className="cursor-pointer hover:opacity-50" />
+          </button>
           <ShareOutlineIcon className="cursor-pointer hover:opacity-50" />
         </div>
         <ToggleSave

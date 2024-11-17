@@ -7,9 +7,15 @@ import "./styles/carousel.css";
 
 type ImageSliderProps = {
   images: string[];
+  imageClassName?: string;
+  className?: string;
 };
 
-const ImageSlider = ({ images }: ImageSliderProps) => {
+const ImageSlider = ({
+  images,
+  imageClassName,
+  className,
+}: ImageSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = useCallback(() => {
@@ -28,10 +34,10 @@ const ImageSlider = ({ images }: ImageSliderProps) => {
   );
 
   return (
-    <div className="carousel-container">
+    <div className={twMerge("carousel-container", className)}>
       {/* Images */}
       <div
-        className="carousel-track"
+        className={twMerge("carousel-track")}
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, index) => (
@@ -39,7 +45,7 @@ const ImageSlider = ({ images }: ImageSliderProps) => {
             key={index}
             src={img}
             alt={`Slide ${index + 1}`}
-            className="carousel-image"
+            className={twMerge("carousel-image", imageClassName)}
           />
         ))}
       </div>
