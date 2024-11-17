@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import PostCard from "../../components/PostCard";
 import UserSummarySuggestCard, {
@@ -7,6 +8,7 @@ import { GlobalState } from "../../data/global/global.slice";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { useBreakpoint } from "../../hooks/useBreakPoint";
 import { PostDTO } from "../../types/data.type";
+import PostDetailModal from "./components/PostDetailModal";
 
 const POST_DATA: PostDTO[] = [
   {
@@ -19,6 +21,7 @@ const POST_DATA: PostDTO[] = [
         key: "key1",
         url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4382.jpg",
       },
+      userDisplayName: "User Display Name",
     },
     postImages: [
       {
@@ -47,6 +50,7 @@ const POST_DATA: PostDTO[] = [
         key: "key1",
         url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
       },
+      userDisplayName: "User Display Name",
     },
     postImages: [
       {
@@ -67,6 +71,7 @@ const POST_DATA: PostDTO[] = [
         key: "key1",
         url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR55VBH6gLT6OUX61AF0AK4BPGagMYbGI7TKTOOx3Y0z8w_Vxx6QKS97uY1_yhw3cwfGg4&usqp=CAU",
       },
+      userDisplayName: "User Display Name",
     },
     postImages: [
       {
@@ -112,11 +117,19 @@ function HomePage() {
 
   const { isLg: isScreenLargerThanLg } = useBreakpoint("lg");
 
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
   return (
     <div className="flex-1 flex flex-row">
       <div className="flex flex-col gap-8 items-center flex-1">
         {POST_DATA.map((postData) => (
-          <PostCard key={postData.id} postData={postData} />
+          <PostCard
+            onCommentClick={() => {
+              setSelectedPostId(postData.id);
+            }}
+            key={postData.id}
+            postData={postData}
+          />
         ))}
       </div>
 
@@ -151,6 +164,12 @@ function HomePage() {
             {...userSuggestData}
           />
         ))}
+        <PostDetailModal
+          postId={selectedPostId}
+          onClose={() => {
+            setSelectedPostId(null);
+          }}
+        />
       </div>
     </div>
   );

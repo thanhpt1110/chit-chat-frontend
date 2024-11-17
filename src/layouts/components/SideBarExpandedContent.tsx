@@ -11,7 +11,7 @@ function SideBarExpandedContent() {
   return (
     <div
       className={twMerge(
-        "w-96 border px-4 py-6 bg-white h-full absolute z-[10000] shadow-lg rounded-e-2xl",
+        "w-96 border px-4 py-6 bg-white h-full absolute z-[50] shadow-lg rounded-e-2xl",
         !sideBarExpandedContent && "hidden"
       )}
     >

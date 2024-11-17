@@ -21,6 +21,7 @@ export type ImageDTO = {
 export type UserDTO = {
   id: string;
   username: string;
+  userDisplayName: string;
   profileImage: ImageDTO;
 };
 
@@ -33,4 +34,23 @@ export type MessageDTO = {
 export type ConversationDTO = {
   senderId: string;
   message: MessageDTO;
+};
+
+export type ExploreItemInListDTO = {
+  postId: string;
+  postImage: ImageDTO;
+  likeCount: number;
+  commentCount: number;
+};
+
+export type CommentDTO = {
+  id: string;
+  commentAt: number;
+  commentUser: UserDTO;
+  comment: string;
+};
+
+export type PostDetailDTO = {
+  post: PostDTO;
+  comments: CommentDTO[];
 };
