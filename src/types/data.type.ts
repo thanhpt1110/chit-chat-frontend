@@ -5,7 +5,7 @@ export type BaseResponse<T> = {
 };
 
 export type PostDTO = {
-  id: number;
+  id: string;
   postAt: number;
   postUser: UserDTO;
   postImages: ImageDTO[];
@@ -19,7 +19,18 @@ export type ImageDTO = {
 };
 
 export type UserDTO = {
-  id: number;
+  id: string;
   username: string;
   profileImage: ImageDTO;
+};
+
+export type MessageDTO = {
+  messageId: string;
+  content: string;
+  time: number;
+};
+
+export type ConversationDTO = {
+  senderId: string;
+  message: MessageDTO;
 };

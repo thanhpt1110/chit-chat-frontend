@@ -9,6 +9,7 @@ export type GlobalState = {
 
 const initialState: GlobalState = {
   userInfo: {
+    userId: "1",
     displayName: "Thanh Tuan",
     username: "lttuan_",
     avatarUrl:

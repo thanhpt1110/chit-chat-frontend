@@ -10,10 +10,10 @@ import { PostDTO } from "../../types/data.type";
 
 const POST_DATA: PostDTO[] = [
   {
-    id: 1,
+    id: "1",
     postAt: 1700141450000,
     postUser: {
-      id: 1,
+      id: "1",
       username: "user1",
       profileImage: {
         key: "key1",
@@ -38,10 +38,10 @@ const POST_DATA: PostDTO[] = [
     caption: "Caption 1",
   },
   {
-    id: 2,
+    id: "2",
     postAt: 1700141180000,
     postUser: {
-      id: 1,
+      id: "1",
       username: "user1",
       profileImage: {
         key: "key1",
@@ -58,10 +58,10 @@ const POST_DATA: PostDTO[] = [
     caption: "Caption 2",
   },
   {
-    id: 3,
+    id: "3",
     postAt: 1700141180000,
     postUser: {
-      id: 1,
+      id: "1",
       username: "user1",
       profileImage: {
         key: "key1",
