@@ -1,4 +1,5 @@
 export type UserInfo = {
+  userId: string;
   displayName: string;
   username: string;
   avatarUrl: string;

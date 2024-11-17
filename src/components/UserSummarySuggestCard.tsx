@@ -1,4 +1,5 @@
 import ImageWithFallback from "./ImageWithFallback";
+import UserNameDisplay from "./UserNameDisplay";
 
 export type UserSuggestData = {
   avatarUrl: string;
@@ -27,7 +28,7 @@ function UserSummarySuggestCard({
           src={avatarUrl}
         />
         <div className="flex flex-col">
-          <div className="text-sm font-medium">@{username}</div>
+          <UserNameDisplay username={`@${username}`} />
           <div className="text-sm text-gray-600">{summarySuggestContent}</div>
         </div>
       </div>
