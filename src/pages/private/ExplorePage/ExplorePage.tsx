@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { generateExploreData } from "../../data/mocks/explore.mock";
-import { ExploreItemInListDTO } from "../../types/data.type";
-import ExploreCard from "./components/ExploreCard";
-import PostDetailModal from "./components/PostDetailModal";
+import { generateExploreData } from "../../../data/mocks/explore.mock";
+import { ExploreItemInListDTO } from "../../../types/data.type";
+import ExploreCard from "../components/ExploreCard";
+import PostDetailModal from "../components/PostDetailModal";
 
 const EXPLORE_DATA: ExploreItemInListDTO[] = generateExploreData(100);
 

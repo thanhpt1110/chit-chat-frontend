@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import { APP_ROUTE } from "../helpers/constants/route.constant";
 
 type UserNameDisplayProps = {
   username: string;
@@ -6,7 +8,10 @@ type UserNameDisplayProps = {
 };
 
 function UserNameDisplay({ username, className }: UserNameDisplayProps) {
-  const handleNavigateToUserProfile = () => {};
+  const navigate = useNavigate();
+  const handleNavigateToUserProfile = () => {
+    navigate(APP_ROUTE.MAIN.PROFILE);
+  };
 
   return (
     <button onClick={handleNavigateToUserProfile}>
