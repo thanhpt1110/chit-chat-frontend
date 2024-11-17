@@ -3,12 +3,7 @@ import { ExploreItemInListDTO } from "../../../types/data.type";
 
 type ExploreCardProps = {} & ExploreItemInListDTO;
 
-function ExploreCard({
-  postId,
-  postImage,
-  likeCount,
-  commentCount,
-}: ExploreCardProps) {
+function ExploreCard({ postImage, likeCount, commentCount }: ExploreCardProps) {
   return (
     <div className="bg-black max-h-80 max-w-80 relative group">
       {/* Background */}
