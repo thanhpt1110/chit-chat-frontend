@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { OpenSendNewMessageOutlineIcon } from "../../components/icons/OpenSendNewMessageOutlineIcon";
-import MessageItemInList, {
-  MessageItemInListDTO,
-} from "../../components/MessageItemInList";
-import UserNameDisplay from "../../components/UserNameDisplay";
-import { GlobalState } from "../../data/global/global.slice";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import Conversation from "./components/Conversation";
-
+import Conversation from "../components/Conversation";
+import UserNameDisplay from "../../../components/UserNameDisplay";
+import { OpenSendNewMessageOutlineIcon } from "../../../components/icons/OpenSendNewMessageOutlineIcon";
+import MessageItemInList, { MessageItemInListDTO } from "../../../components/MessageItemInList";
+import { GlobalState } from "../../../data/global/global.slice";
+import { useAppSelector } from "../../../hooks/reduxHooks";
+ 
 const MESSAGES_DATA: MessageItemInListDTO[] = [
   {
     messageId: "1",

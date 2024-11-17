@@ -1,11 +1,21 @@
 import ImageWithFallback from "../../../components/ImageWithFallback";
 import { ExploreItemInListDTO } from "../../../types/data.type";
 
-type ExploreCardProps = {} & ExploreItemInListDTO;
+type ExploreCardProps = {
+  className?: string;
+} & ExploreItemInListDTO;
 
-function ExploreCard({ postImage, likeCount, commentCount }: ExploreCardProps) {
+function ExploreCard({
+  postImage,
+  likeCount,
+  commentCount,
+  className,
+}: ExploreCardProps) {
   return (
-    <div className="bg-black max-h-80 max-w-80 relative group">
+    <div
+      className="bg-black max-w-80 relative group"
+      style={{ aspectRatio: "1 / 1" }}
+    >
       {/* Background */}
       <ImageWithFallback
         src={postImage.url}

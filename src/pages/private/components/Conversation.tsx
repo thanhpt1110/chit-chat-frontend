@@ -62,7 +62,7 @@ function Conversation({ sender, lastSenderActiveTime }: ConversationProps) {
     <div className="w-full h-full flex flex-row">
       <div className="w-full h-full flex flex-col">
         {/* Conversation Header */}
-        <div className="flex flex-row justify-between py-3 border-b">
+        <div className="flex flex-row justify-between py-3 px-4 border-b">
           <div className="flex flex-row gap-2">
             <ImageWithFallback
               className="h-12 w-12 rounded-full"
@@ -76,7 +76,7 @@ function Conversation({ sender, lastSenderActiveTime }: ConversationProps) {
               </span>
             </div>
           </div>
-          <div className="flex flex-row gap-4 mr-4">
+          <div className="flex flex-row gap-4">
             <button onClick={() => {}}>
               <PhoneCallOutlineIcon />
             </button>

@@ -3,10 +3,10 @@ import { APP_ROUTE } from "../helpers/constants/route.constant";
 import MainLayout from "../layouts/MainLayout";
 import PrivateRoute from "../layouts/PrivateRoute";
 import PublicRoute from "../layouts/PublicRoute";
-import ExplorePage from "../pages/private/ExplorePage";
-import HomePage from "../pages/private/HomePage";
-import MessagesPage from "../pages/private/MessagesPage";
-import ProfilePage from "../pages/private/ProfilePage";
+import ExplorePage from "../pages/private/ExplorePage/ExplorePage";
+import HomePage from "../pages/private/HomePage/HomePage";
+import MessagesPage from "../pages/private/MessagePage/MessagesPage";
+import ProfilePage from "../pages/private/ProfilePage/ProfilePage";
 import LoginPage from "../pages/public/LoginPage";
 import SignUpPage from "../pages/public/SignUpPage";
 

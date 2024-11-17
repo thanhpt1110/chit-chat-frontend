@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import PostCard from "../../components/PostCard";
+import PostCard from "../../../components/PostCard";
 import UserSummarySuggestCard, {
   UserSuggestData,
-} from "../../components/UserSummarySuggestCard";
-import { GlobalState } from "../../data/global/global.slice";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import { useBreakpoint } from "../../hooks/useBreakPoint";
-import { PostDTO } from "../../types/data.type";
-import PostDetailModal from "./components/PostDetailModal";
+} from "../../../components/UserSummarySuggestCard";
+import { GlobalState } from "../../../data/global/global.slice";
+import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useBreakpoint } from "../../../hooks/useBreakPoint";
+import { PostDTO } from "../../../types/data.type";
+import PostDetailModal from "../components/PostDetailModal";
 
 const POST_DATA: PostDTO[] = [
   {

@@ -54,3 +54,13 @@ export type PostDetailDTO = {
   post: PostDTO;
   comments: CommentDTO[];
 };
+
+export type UserDetailDTO = {
+  username: string;
+  userDisplayName: string;
+  postCount: number;
+  followerCount: number;
+  followingCount: number;
+  profileImage: ImageDTO;
+  bio: string;
+};
