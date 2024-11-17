@@ -33,7 +33,7 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
       postImages: [
         {
           key: "1",
-          url: "https://i.pinimg.com/736x/21/eb/2d/21eb2d69245780ca72808aa9627115bf.jpg",
+          url: "https://i.pinimg.com/736x/38/16/a9/3816a930470cb0e7d784f29421fc93b4.jpg",
         },
         {
           key: "2",
@@ -41,7 +41,7 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
         },
         {
           key: "3",
-          url: "https://i.pinimg.com/736x/38/16/a9/3816a930470cb0e7d784f29421fc93b4.jpg",
+          url: "https://i.pinimg.com/736x/ae/97/c1/ae97c112f9ecb8101083a6e6561a7745.jpg",
         },
       ],
       likeCount: 0,
