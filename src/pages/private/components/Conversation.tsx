@@ -21,11 +21,7 @@ type ConversationProps = {
 const CONVERSATION_DATA: ConversationDTO[] =
   generateConversationDataRealistic(100);
 
-function Conversation({
-  conversationId,
-  sender,
-  lastSenderActiveTime,
-}: ConversationProps) {
+function Conversation({ sender, lastSenderActiveTime }: ConversationProps) {
   const { userInfo }: GlobalState = useAppSelector((state) => state.global);
 
   const [conversationData, setConversationData] =
