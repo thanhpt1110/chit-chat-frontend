@@ -11,7 +11,7 @@ const initialState: GlobalState = {
   userInfo: {
     userId: "1",
     displayName: "Thanh Tuan",
-    username: "lttuan_",
+    username: "thanhpt1110",
     avatarUrl:
       "https://i.pinimg.com/736x/5d/c5/62/5dc562fd84db2353f567799f1e5502b1.jpg",
   },

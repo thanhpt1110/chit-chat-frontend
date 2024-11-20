@@ -2,10 +2,12 @@ import { useState } from "react";
 import Conversation from "../components/Conversation";
 import UserNameDisplay from "../../../components/UserNameDisplay";
 import { OpenSendNewMessageOutlineIcon } from "../../../components/icons/OpenSendNewMessageOutlineIcon";
-import MessageItemInList, { MessageItemInListDTO } from "../../../components/MessageItemInList";
+import MessageItemInList, {
+  MessageItemInListDTO,
+} from "../../../components/MessageItemInList";
 import { GlobalState } from "../../../data/global/global.slice";
 import { useAppSelector } from "../../../hooks/reduxHooks";
- 
+
 const MESSAGES_DATA: MessageItemInListDTO[] = [
   {
     messageId: "1",
@@ -75,7 +77,7 @@ function MessagesPage() {
         lastSenderActiveTime={Date.now()}
         sender={{
           id: "1",
-          username: "lttuan_",
+          username: "thanhpt1110",
           profileImage: {
             key: "1",
             url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
