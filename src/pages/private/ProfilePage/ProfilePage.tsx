@@ -8,12 +8,12 @@ import { UserDetailDTO } from "../../../types/data.type";
 import PostTab from "./components/PostTab";
 import SavedTab from "./components/SavedTab";
 import TaggedTab from "./components/TaggedTab";
- 
+
 function ProfilePage() {
   const { userInfo }: GlobalState = useAppSelector((state) => state.global);
 
   const userDetailData: UserDetailDTO = {
-    username: "lttuan",
+    username: "thanhpt1110",
     userDisplayName: "Thanh Tuan",
     postCount: 10,
     followerCount: 20,
