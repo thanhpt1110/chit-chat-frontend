@@ -45,7 +45,7 @@ const POST_DATA: PostDTO[] = [
     postAt: 1700141180000,
     postUser: {
       id: "1",
-      username: "user1",
+      username: "user2",
       profileImage: {
         key: "key1",
         url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
@@ -66,7 +66,7 @@ const POST_DATA: PostDTO[] = [
     postAt: 1700141180000,
     postUser: {
       id: "1",
-      username: "user1",
+      username: "user3",
       profileImage: {
         key: "key1",
         url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR55VBH6gLT6OUX61AF0AK4BPGagMYbGI7TKTOOx3Y0z8w_Vxx6QKS97uY1_yhw3cwfGg4&usqp=CAU",
@@ -92,23 +92,23 @@ const NEW_PEOPLE_SUGGESTED_DATA: UserSuggestData[] = [
   },
   {
     avatarUrl: "https://i.pinimg.com",
-    username: "user1",
-    summarySuggestContent: "Suggest 1",
+    username: "user2",
+    summarySuggestContent: "Suggest 2",
   },
   {
     avatarUrl: "https://i.pinimg.com",
-    username: "user1",
-    summarySuggestContent: "Suggest 1",
+    username: "user3",
+    summarySuggestContent: "Suggest 3",
   },
   {
     avatarUrl: "https://i.pinimg.com",
-    username: "user1",
-    summarySuggestContent: "Suggest 1",
+    username: "user4",
+    summarySuggestContent: "Suggest 4",
   },
   {
     avatarUrl: "https://i.pinimg.com",
-    username: "user1",
-    summarySuggestContent: "Suggest 1",
+    username: "user5",
+    summarySuggestContent: "Suggest 5",
   },
 ];
 
