@@ -12,4 +12,5 @@ export enum SIDEBAR_TITLE {
 export enum EXPANDED_CONTENT_TYPE {
   SEARCH = "Search",
   NOTIFICATIONS = "Notifications",
+  MESSAGES = "Messages",
 }

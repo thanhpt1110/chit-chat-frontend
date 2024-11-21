@@ -13,7 +13,7 @@ import {
 import SidebarButton from "./SidebarButton";
 
 function SideBar() {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [activedIndex, setActivedIndex] = useState<number>(0);
 
   const navigate = useNavigate();
@@ -30,22 +30,26 @@ function SideBar() {
           navigate(APP_ROUTE.MAIN.HOME);
           break;
         case SIDEBAR_TITLE.SEARCH:
-          dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.SEARCH));
           setIsExpanded(false);
+          dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.SEARCH));
           break;
         case SIDEBAR_TITLE.EXPLORE:
+          setIsExpanded(true);
           navigate(APP_ROUTE.MAIN.EXPLORE);
           break;
         case SIDEBAR_TITLE.NOTIFICATIONS:
+          setIsExpanded(false);
           dispatch(
             setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.NOTIFICATIONS)
           );
-          setIsExpanded(false);
           break;
         case SIDEBAR_TITLE.MESSAGES:
+          setIsExpanded(false);
+          dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.MESSAGES));
           navigate(APP_ROUTE.MAIN.MESSAGES);
           break;
         case SIDEBAR_TITLE.PROFILE:
+          setIsExpanded(true);
           navigate(APP_ROUTE.MAIN.PROFILE);
           break;
         default:
@@ -62,7 +66,7 @@ function SideBar() {
   return (
     <div
       className={twMerge(
-        "border h-full flex flex-col justify-between border-gray-200",
+        "border h-full flex flex-col justify-between border-gray-200 transition-all",
         isExpanded ? "w-80" : "w-24"
       )}
     >
@@ -74,7 +78,7 @@ function SideBar() {
           {isExpanded ? (
             <img className="w-48" src="/ChitChatLong.svg" />
           ) : (
-            <img className="w-12" src="/ChitChat.svg" />
+            <img className="w-16" src="/ChitChat.svg" />
           )}
         </button>
 
@@ -90,10 +94,10 @@ function SideBar() {
           />
         ))}
       </div>
-      <div>
+      <div className="border-t-black border-t-[1px]">
         <button
           onClick={handleLogout}
-          className="w-full h-12 flex flex-row items-center justify-center overflow-hidden"
+          className="w-full h-12 flex flex-row overflow-hidden ml-5 mt-4"
         >
           Logout
         </button>

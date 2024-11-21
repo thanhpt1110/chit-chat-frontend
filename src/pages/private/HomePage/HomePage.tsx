@@ -120,8 +120,8 @@ function HomePage() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   return (
-    <div className="flex-1 flex flex-row">
-      <div className="flex flex-col gap-8 items-center flex-1">
+    <div className="flex-1 flex flex-row mt-5">
+      <div className="flex flex-col gap-8 items-center flex-1 mt-4">
         {POST_DATA.map((postData) => (
           <PostCard
             onCommentClick={() => {

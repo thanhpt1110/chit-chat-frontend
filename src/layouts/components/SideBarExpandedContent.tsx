@@ -8,11 +8,16 @@ function SideBarExpandedContent() {
   const { sideBarExpandedContent }: GlobalState = useAppSelector(
     (state: RootState) => state.global
   );
+
+  const isHidden =
+    !sideBarExpandedContent ||
+    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.MESSAGES;
+
   return (
     <div
       className={twMerge(
-        "w-96 border px-4 py-6 bg-white h-full absolute z-[50] shadow-lg rounded-e-2xl",
-        !sideBarExpandedContent && "hidden"
+        "absolute top-0 left-[96px] w-96 border px-4 py-6 bg-white h-full z-[50] shadow-lg rounded-e-2xl",
+        isHidden && "hidden"
       )}
     >
       {sideBarExpandedContent === EXPANDED_CONTENT_TYPE.SEARCH && (
