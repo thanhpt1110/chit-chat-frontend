@@ -11,7 +11,8 @@ function SideBarExpandedContent() {
 
   const isHidden =
     !sideBarExpandedContent ||
-    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.MESSAGES;
+    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.MESSAGES ||
+    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.PROFILE;
 
   return (
     <div

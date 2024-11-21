@@ -10,15 +10,21 @@ function MainLayout() {
   const { sideBarExpandedContent }: GlobalState = useAppSelector(
     (state: RootState) => state.global
   );
-  const isHidden = sideBarExpandedContent === EXPANDED_CONTENT_TYPE.MESSAGES;
 
+  const isSidebarExpanded =
+    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.MESSAGES ||
+    sideBarExpandedContent === EXPANDED_CONTENT_TYPE.PROFILE;
   return (
     <div className="flex flex-row flex-start h-full">
-      <div className="w-24">
+      <div
+        className={`relative transition-all ${
+          isSidebarExpanded ? "w-24" : "w-[500px]"
+        }`}
+      >
         <SideBar />
         <SideBarExpandedContent />
       </div>
-      <div className={`w-full overflow-auto ${isHidden ? "ml-44" : ""}`}>
+      <div className="w-full overflow-auto">
         <Outlet />
       </div>
     </div>

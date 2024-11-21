@@ -47,9 +47,11 @@ function SideBar() {
           setIsExpanded(false);
           dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.MESSAGES));
           navigate(APP_ROUTE.MAIN.MESSAGES);
+          ``;
           break;
         case SIDEBAR_TITLE.PROFILE:
           setIsExpanded(true);
+          dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.PROFILE));
           navigate(APP_ROUTE.MAIN.PROFILE);
           break;
         default:

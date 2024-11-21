@@ -13,4 +13,5 @@ export enum EXPANDED_CONTENT_TYPE {
   SEARCH = "Search",
   NOTIFICATIONS = "Notifications",
   MESSAGES = "Messages",
+  PROFILE = "Profile",
 }
