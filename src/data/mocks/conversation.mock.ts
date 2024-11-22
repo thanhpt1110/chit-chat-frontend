@@ -1,4 +1,6 @@
+import { useAppSelector } from "../../hooks/reduxHooks";
 import { ConversationDTO } from "../../types/data.type";
+import { GlobalState } from "../global/global.slice";
 
 function generateRealisticMessage(length: number): string {
   const words = [
@@ -52,8 +54,9 @@ function generateRealisticMessage(length: number): string {
 export function generateConversationDataRealistic(
   numMessages: number
 ): ConversationDTO[] {
+  const { userInfo }: GlobalState = useAppSelector((state) => state.global);
   const conversationData: ConversationDTO[] = [];
-  const senderIds = ["1", "2"]; // Mock sender IDs
+  const senderIds = [userInfo.userId, "2"]; // Mock sender IDs
   const baseTime = Date.now();
 
   for (let i = 0; i < numMessages; i++) {

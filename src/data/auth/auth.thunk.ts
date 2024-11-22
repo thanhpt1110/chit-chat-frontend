@@ -1,4 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { UserInfo } from "../../types/users.type";
+import { setUserInfo } from "../global/global.slice";
 import { LoginRES } from "./auth.response";
 import { setIsAuthenticated } from "./auth.slice";
 
@@ -7,6 +9,12 @@ export const loginThunk = createAsyncThunk<void, LoginRES>(
   async (loginRES, { dispatch }) => {
     localStorage.setItem("accessToken", loginRES.accessToken);
     localStorage.setItem("refreshToken", loginRES.refreshToken);
+    const userInfo: UserInfo = {
+      userId: loginRES.user.id,
+      username: loginRES.user.displayName,
+      ...loginRES.user,
+    };
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
     dispatch(setIsAuthenticated(true));
   }
 );
@@ -25,7 +33,12 @@ export const syncAccessTokenThunk = createAsyncThunk<void, void>(
   (_, { dispatch }) => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      dispatch(setIsAuthenticated(true));
+      const userInfoString = localStorage.getItem("userInfo");
+      if (userInfoString) {
+        const userInfo: UserInfo = JSON.parse(userInfoString);
+        dispatch(setIsAuthenticated(true));
+        dispatch(setUserInfo(userInfo));
+      }
     } else {
       dispatch(setIsAuthenticated(false));
     }

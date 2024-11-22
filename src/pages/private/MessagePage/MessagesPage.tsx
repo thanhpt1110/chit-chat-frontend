@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Conversation from "../components/Conversation";
-import UserNameDisplay from "../../../components/UserNameDisplay";
 import { OpenSendNewMessageOutlineIcon } from "../../../components/icons/OpenSendNewMessageOutlineIcon";
 import MessageItemInList, {
   MessageItemInListDTO,
 } from "../../../components/MessageItemInList";
+import UserNameDisplay from "../../../components/UserNameDisplay";
 import { GlobalState } from "../../../data/global/global.slice";
 import { useAppSelector } from "../../../hooks/reduxHooks";
+import Conversation from "../components/Conversation";
 
 const MESSAGES_DATA: MessageItemInListDTO[] = [
   {
@@ -15,7 +15,7 @@ const MESSAGES_DATA: MessageItemInListDTO[] = [
     time: Date.now(),
     isRead: true,
     userDisplayName: "John Doe",
-    userImageUrl: "https://randomuser.me/api/port",
+    userImageUrl: "https://avatar.iran.liara.run/public/boy",
     fromMe: false,
   },
   {
@@ -24,7 +24,7 @@ const MESSAGES_DATA: MessageItemInListDTO[] = [
     time: Date.now(),
     isRead: false,
     userDisplayName: "Jane Doe",
-    userImageUrl: "https://randomuser.me/api/port",
+    userImageUrl: "https://avatar.iran.liara.run/public/girl",
     fromMe: true,
   },
   {
@@ -33,7 +33,7 @@ const MESSAGES_DATA: MessageItemInListDTO[] = [
     time: Date.now(),
     isRead: true,
     userDisplayName: "John Doe",
-    userImageUrl: "https://randomuser.me/api/port",
+    userImageUrl: "https://avatar.iran.liara.run/public",
     fromMe: false,
   },
 ];
@@ -77,10 +77,10 @@ function MessagesPage() {
         lastSenderActiveTime={Date.now()}
         sender={{
           id: "1",
-          username: "thanhpt1110",
+          username: "John Doe",
           profileImage: {
             key: "1",
-            url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
+            url: "https://avatar.iran.liara.run/public/boy",
           },
           userDisplayName: "Tuan Le",
         }}

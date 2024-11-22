@@ -18,11 +18,11 @@ type ConversationProps = {
   lastSenderActiveTime: number;
 };
 
-const CONVERSATION_DATA: ConversationDTO[] =
-  generateConversationDataRealistic(100);
-
 function Conversation({ sender, lastSenderActiveTime }: ConversationProps) {
   const { userInfo }: GlobalState = useAppSelector((state) => state.global);
+
+  const CONVERSATION_DATA: ConversationDTO[] =
+    generateConversationDataRealistic(100);
 
   const [conversationData, setConversationData] =
     useState<ConversationDTO[]>(CONVERSATION_DATA);
@@ -104,7 +104,7 @@ function Conversation({ sender, lastSenderActiveTime }: ConversationProps) {
                 (index === conversationData.length - 1 ||
                   messageItem.senderId !== conversationData[index + 1].senderId)
               }
-              senderAvatarUrl="https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg"
+              senderAvatarUrl="https://avatar.iran.liara.run/public/boy"
               isFirst={
                 (index === 0 ||
                   messageItem.senderId !==

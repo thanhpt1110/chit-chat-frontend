@@ -19,7 +19,7 @@ const POST_DATA: PostDTO[] = [
       username: "user1",
       profileImage: {
         key: "key1",
-        url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4382.jpg",
+        url: "https://avatar.iran.liara.run/public/boy",
       },
       userDisplayName: "User Display Name",
     },
@@ -48,7 +48,7 @@ const POST_DATA: PostDTO[] = [
       username: "user2",
       profileImage: {
         key: "key1",
-        url: "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4394.jpg",
+        url: "https://avatar.iran.liara.run/public/girl",
       },
       userDisplayName: "User Display Name",
     },
@@ -69,7 +69,7 @@ const POST_DATA: PostDTO[] = [
       username: "user3",
       profileImage: {
         key: "key1",
-        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR55VBH6gLT6OUX61AF0AK4BPGagMYbGI7TKTOOx3Y0z8w_Vxx6QKS97uY1_yhw3cwfGg4&usqp=CAU",
+        url: "https://avatar.iran.liara.run/public/boy",
       },
       userDisplayName: "User Display Name",
     },
