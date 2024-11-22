@@ -15,6 +15,7 @@ export const loginThunk = createAsyncThunk<void, LoginRES>(
       ...loginRES.user,
     };
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    dispatch(setUserInfo(userInfo));
     dispatch(setIsAuthenticated(true));
   }
 );
@@ -36,8 +37,8 @@ export const syncAccessTokenThunk = createAsyncThunk<void, void>(
       const userInfoString = localStorage.getItem("userInfo");
       if (userInfoString) {
         const userInfo: UserInfo = JSON.parse(userInfoString);
-        dispatch(setIsAuthenticated(true));
         dispatch(setUserInfo(userInfo));
+        dispatch(setIsAuthenticated(true));
       }
     } else {
       dispatch(setIsAuthenticated(false));

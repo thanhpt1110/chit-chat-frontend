@@ -20,7 +20,7 @@ function ProfilePage() {
     followingCount: 30,
     profileImage: {
       key: "key",
-      url: "https://i.pinimg.com/736x/b9/88/df/b988dfe9a1d31d32cad9b7aaa36c479c.jpg",
+      url: "https://avatar.iran.liara.run/public/boy",
     },
     bio: "I'm a software engineer",
   };
@@ -45,14 +45,14 @@ function ProfilePage() {
   return (
     <div className="flex w-full h-full justify-center">
       <div className="max-w-5xl flex flex-col">
-        <div className="flex flex-row justify-between gap-16 items-center mt-16">
+        <div className="flex flex-row justify-between gap-16 items-center mt-16 px-6">
           <ImageWithFallback
-            className="w-32 h-32 rounded-full"
+            className="w-36 h-36 rounded-full"
             alt="Profile"
             src={userDetailData.profileImage.url}
           />
           <div className="flex flex-col">
-            <div className="flex flex-row justify-between items-center gap-4">
+            <div className="flex flex-row justify-between items-center gap-12">
               <div className="text-lg font-medium">@{userInfo.username}</div>
               <ActionButton title="Edit Profile" onClick={() => {}} />
               <ActionButton title="View Archive" onClick={() => {}} />
