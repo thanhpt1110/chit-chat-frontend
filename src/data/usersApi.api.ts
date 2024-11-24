@@ -5,6 +5,7 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import { TAG_TYPES } from "../helpers/constants/common.constant";
 import { apiBaseUrl } from "../helpers/constants/configs.constant";
 import { logoutThunk } from "./auth/auth.thunk";
 
@@ -34,5 +35,5 @@ const baseQueryWithReAuth: BaseQueryFn<
 export const usersApi = createApi({
   baseQuery: baseQueryWithReAuth,
   endpoints: () => ({}),
-  tagTypes: [],
+  tagTypes: [TAG_TYPES.POST],
 });

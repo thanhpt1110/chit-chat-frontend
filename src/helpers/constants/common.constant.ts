@@ -1,4 +1,6 @@
-export const TAG_TYPES = {};
+export const TAG_TYPES = {
+  POST: "POST",
+};
 
 export enum HTTP_METHOD {
   GET = "GET",

@@ -55,7 +55,7 @@ function AddPostModal() {
     },
   });
 
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { isLoading: isAddingPost }] = useCreatePostMutation();
 
   const onSubmit = async (data: { description: string }) => {
     if (images.length === 0) {
@@ -100,6 +100,7 @@ function AddPostModal() {
                 {"Add new post"}
               </div>
               <button
+                disabled={isAddingPost}
                 onClick={handleSubmit(onSubmit)}
                 className="px-8 py-2 h-full font-medium text-blue-400 hover:text-blue-800"
               >
