@@ -1,4 +1,6 @@
-export const TAG_TYPES = {};
+export const TAG_TYPES = {
+  POST: "POST",
+};
 
 export enum HTTP_METHOD {
   GET = "GET",
@@ -7,3 +9,8 @@ export enum HTTP_METHOD {
   DELETE = "DELETE",
   PATCH = "PATCH",
 }
+
+export const PARAM_FIELD = {
+  PAGE_INDEX: "PageIndex",
+  PAGE_SIZE: "PageSize",
+};

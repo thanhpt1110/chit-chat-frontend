@@ -1,4 +1,7 @@
-import { HTTP_METHOD } from "../../helpers/constants/common.constant";
+import {
+  HTTP_METHOD,
+  TAG_TYPES,
+} from "../../helpers/constants/common.constant";
 import { BaseResponse, PostDTO } from "../../types/data.type";
 import { usersApi } from "../usersApi.api";
 import { GetListPostREQ } from "./post.request";
@@ -16,6 +19,7 @@ const postApi = usersApi.injectEndpoints({
       transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
         return response.result.map((post) => getPostDTO(post));
       },
+      providesTags: [TAG_TYPES.POST],
     }),
     createPost: build.mutation<void, FormData>({
       query: (body) => ({
@@ -23,6 +27,17 @@ const postApi = usersApi.injectEndpoints({
         method: HTTP_METHOD.POST,
         body,
       }),
+      invalidatesTags: [{ type: TAG_TYPES.POST }],
+    }),
+    getExploreList: build.query<PostDTO[], GetListPostREQ>({
+      query: (params) => ({
+        url: `/Post/reccomendation`,
+        method: HTTP_METHOD.GET,
+        params,
+      }),
+      transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
+        return response.result.map((post) => getPostDTO(post));
+      },
     }),
   }),
 });

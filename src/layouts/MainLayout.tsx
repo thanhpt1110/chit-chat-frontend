@@ -26,7 +26,7 @@ function MainLayout() {
         <SideBar />
         <SideBarExpandedContent />
       </div>
-      <div className="w-full overflow-auto">
+      <div className="w-full h-full">
         <Outlet />
       </div>
       <AddPostModal />

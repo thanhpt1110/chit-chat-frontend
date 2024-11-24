@@ -87,7 +87,7 @@ function SideBar() {
         )}
       >
         <div>
-          <div className="w-full py-4 flex flex-row items-center justify-center overflow-hidden">
+          <div className="w-full py-4 flex flex-row items-center justify-center">
             {isExpanded ? (
               <img className="w-48" src="/ChitChatLong.svg" />
             ) : (
@@ -110,7 +110,7 @@ function SideBar() {
         <div className="border-t-black border-t-[1px]">
           <button
             onClick={handleLogout}
-            className="w-full h-12 flex flex-row overflow-hidden ml-5 mt-4"
+            className="w-full h-12 flex flex-row ml-5 mt-4"
           >
             Logout
           </button>

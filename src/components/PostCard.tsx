@@ -35,14 +35,15 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
         </div>
         <div></div>
       </div>
-      <button
+      <div
+        className="cursor-pointer"
         onDoubleClick={() => {
           setIsLiked((prev) => !prev);
           handleToggleLike();
         }}
       >
         <ImageSlider images={postData.postImages.map((image) => image.url)} />
-      </button>
+      </div>
       <div className="flex flex-row justify-between">
         <div className="flex flex-row justify-start gap-4 mt-1">
           <ToggleLike
@@ -63,9 +64,12 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
       <div>
         {postData.likeCount} {"likes"}
       </div>
-      <div className="flex flex-row gap-2">
-        <UserNameDisplay username={postData.postUser.username} />
-        <span>{postData.caption}</span>
+      <div className="flex flex-row gap-2 items-start max-w-[400px]">
+        <UserNameDisplay
+          className="text-sm"
+          username={postData.postUser.username}
+        />
+        <span className="line-clamp-3 text-sm">{postData.caption}</span>
       </div>
     </div>
   );
