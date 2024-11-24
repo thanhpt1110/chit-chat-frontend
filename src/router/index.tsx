@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
             element: <MessagesPage />,
           },
           {
-            path: APP_ROUTE.MAIN.PROFILE,
+            path: APP_ROUTE.MAIN.PROFILE(":id"),
             element: <ProfilePage />,
           },
         ],

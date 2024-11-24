@@ -1,0 +1,30 @@
+import { HTTP_METHOD } from "../../helpers/constants/common.constant";
+import { BaseResponse, PostDTO } from "../../types/data.type";
+import { usersApi } from "../usersApi.api";
+import { GetListPostREQ } from "./post.request";
+import { GetListPostRES } from "./post.response";
+import { getPostDTO } from "./post.service";
+
+const postApi = usersApi.injectEndpoints({
+  endpoints: (build) => ({
+    getPosts: build.query<PostDTO[], GetListPostREQ>({
+      query: (params) => ({
+        url: `/Post`,
+        method: HTTP_METHOD.GET,
+        params,
+      }),
+      transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
+        return response.result.map((post) => getPostDTO(post));
+      },
+    }),
+    createPost: build.mutation<void, FormData>({
+      query: (body) => ({
+        url: `/Post`,
+        method: HTTP_METHOD.POST,
+        body,
+      }),
+    }),
+  }),
+});
+
+export const { useGetPostsQuery, useCreatePostMutation } = postApi;

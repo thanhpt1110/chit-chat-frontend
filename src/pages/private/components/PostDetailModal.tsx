@@ -47,6 +47,23 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
       likeCount: 0,
       caption:
         "Hi guys💕 Here’s our web design for ORION – an advanced job platform designed to connect talented professionals with top-tier employers across industries. This software provides a seamless experience for both job seekers and hiring managers, ensuring the right matches are made👨‍💻 👉 If you would like to hire us - you can send your Request 👍 at hello@rondesignlab.com #webdesign #web #ui #ux #uidesign #uxdesign #dribbble #digitalagency #uiux #userexperience #userinterface #appdesign #interface #designagency #uxdesigner #uidesigner #dashboard #webagency #mobileapp #mobileappdesign #interfacedesign #appdesigner #smartapp #softwaredesign #businessapp #adminpanel #dashboarddesign #admindashboard",
+      comment: [
+        {
+          id: "1",
+          commentAt: Date.now(),
+          commentUser: {
+            id: "1",
+            username: "username",
+            profileImage: {
+              key: "1",
+              url: "https://i.pin",
+            },
+            userDisplayName: "usercomment1",
+          },
+          comment:
+            "I love how this design anticipates user needs before they even know them!",
+        },
+      ],
     },
     comments: [
       {

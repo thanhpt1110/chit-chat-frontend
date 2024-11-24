@@ -10,7 +10,7 @@ type UserNameDisplayProps = {
 function UserNameDisplay({ username, className }: UserNameDisplayProps) {
   const navigate = useNavigate();
   const handleNavigateToUserProfile = () => {
-    navigate(APP_ROUTE.MAIN.PROFILE);
+    navigate(APP_ROUTE.MAIN.PROFILE(username));
   };
 
   return (

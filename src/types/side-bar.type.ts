@@ -7,6 +7,7 @@ export enum SIDEBAR_TITLE {
   LISTS = "Lists",
   PROFILE = "Profile",
   MORE = "More",
+  CREATE_POST = "Create Post",
 }
 
 export enum EXPANDED_CONTENT_TYPE {
