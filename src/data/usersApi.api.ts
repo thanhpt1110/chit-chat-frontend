@@ -1,6 +1,6 @@
-import { createApi } from "@reduxjs/toolkit/query";
 import {
   BaseQueryFn,
+  createApi,
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,

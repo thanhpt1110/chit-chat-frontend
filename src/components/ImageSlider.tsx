@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ChevronLeftFillIcon } from "./icons/ChevronLeftFillIcon";
 import { ChevronRightFillIcon } from "./icons/ChevronRightFillIcon";
@@ -32,6 +32,12 @@ const ImageSlider = ({
     () => currentIndex === images.length - 1,
     [currentIndex, images]
   );
+
+  useEffect(() => {
+    if (currentIndex >= images.length) {
+      setCurrentIndex(0);
+    }
+  }, [currentIndex, images.length]);
 
   return (
     <div className={twMerge("carousel-container", className)}>

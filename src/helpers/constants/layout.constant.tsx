@@ -1,3 +1,4 @@
+import { AddFillIcon } from "../../components/icons/AddFillIcon";
 import { ChatFillIcon } from "../../components/icons/ChatFillIcon";
 import { ChatOutlineIcon } from "../../components/icons/ChatOutlineIcon";
 import { ExploreFillIcon } from "../../components/icons/ExploreFillIcon";
@@ -48,5 +49,10 @@ export const SIDEBAR_LAYOUT: SideBarLayoutItem[] = [
     title: SIDEBAR_TITLE.PROFILE,
     icon: <ProfileOutlineIcon />,
     activeIcon: <ProfileFillIcon />,
+  },
+  {
+    title: SIDEBAR_TITLE.CREATE_POST,
+    icon: <AddFillIcon />,
+    activeIcon: <AddFillIcon />,
   },
 ];

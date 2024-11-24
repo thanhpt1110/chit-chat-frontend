@@ -12,6 +12,6 @@ export const APP_ROUTE = {
     HOME: `${ROUTE_NAME.MAIN}`,
     EXPLORE: `${ROUTE_NAME.MAIN}/explore`,
     MESSAGES: `${ROUTE_NAME.MAIN}/messages`,
-    PROFILE: `${ROUTE_NAME.MAIN}/profile`,
+    PROFILE: (id: string) => `${ROUTE_NAME.MAIN}/profile/${id}`,
   },
 };

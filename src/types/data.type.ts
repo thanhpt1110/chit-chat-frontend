@@ -4,6 +4,11 @@ export type BaseResponse<T> = {
   errors: [];
 };
 
+export type PaginationREQ = {
+  PageIndex: number;
+  PageSize: number;
+};
+
 export type PostDTO = {
   id: string;
   postAt: number;
@@ -11,6 +16,7 @@ export type PostDTO = {
   postImages: ImageDTO[];
   likeCount: number;
   caption: string;
+  comment: CommentDTO[];
 };
 
 export type ImageDTO = {
