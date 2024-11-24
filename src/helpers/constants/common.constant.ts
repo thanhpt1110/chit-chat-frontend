@@ -9,3 +9,8 @@ export enum HTTP_METHOD {
   DELETE = "DELETE",
   PATCH = "PATCH",
 }
+
+export const PARAM_FIELD = {
+  PAGE_INDEX: "PageIndex",
+  PAGE_SIZE: "PageSize",
+};
