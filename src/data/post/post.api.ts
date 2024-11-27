@@ -29,16 +29,6 @@ const postApi = usersApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: TAG_TYPES.POST }],
     }),
-    getExploreList: build.query<PostDTO[], GetListPostREQ>({
-      query: (params) => ({
-        url: `/Post/reccomendation`,
-        method: HTTP_METHOD.GET,
-        params,
-      }),
-      transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
-        return response.result.map((post) => getPostDTO(post));
-      },
-    }),
   }),
 });
 

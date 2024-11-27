@@ -1,10 +1,11 @@
+import { UserRES } from "../../types/users.type";
+
 export enum MEDIA_TYPE {
   IMAGE = "Image",
   VIDEO = "Video",
 }
 
 export type PostMediaRES = {
-  postId: string;
   mediaType: MEDIA_TYPE;
   mediaUrl: string;
   mediaOrder: number;
@@ -18,6 +19,7 @@ export type CommentRES = {
   createdOn: string;
   content: string;
   reactionCount: number;
+  userPosted: UserRES;
 };
 
 export type GetListPostRES = {
@@ -27,4 +29,5 @@ export type GetListPostRES = {
   reactionCount: number;
   commentCount: number;
   comments: CommentRES[];
+  userPosted: UserRES;
 };
