@@ -100,7 +100,7 @@ function SideBar() {
               activeIcon={item.activeIcon}
               isActive={activedIndex === index}
               isExpanded={isExpanded}
-              key={index}
+              key={item.title}
               icon={item.icon}
               title={item.title}
               onClick={() => handleSideBarItemSelect(index, item.title)}

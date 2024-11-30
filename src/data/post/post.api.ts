@@ -2,24 +2,57 @@ import {
   HTTP_METHOD,
   TAG_TYPES,
 } from "../../helpers/constants/common.constant";
-import { BaseResponse, PostDTO } from "../../types/data.type";
+import { GET_POST_HOME_PAGE_SIZE } from "../../pages/private/HomePage/HomePage";
+import {
+  BaseResponse,
+  PaginationDTO,
+  PostDetailDTO,
+  PostDTO,
+} from "../../types/data.type";
 import { usersApi } from "../usersApi.api";
 import { GetListPostREQ } from "./post.request";
-import { GetListPostRES } from "./post.response";
-import { getPostDTO } from "./post.service";
+import { GetListPostRES, GetPostDetailRES } from "./post.response";
+import { getPostDetailDTO, getPostDTO } from "./post.service";
 
 const postApi = usersApi.injectEndpoints({
   endpoints: (build) => ({
-    getPosts: build.query<PostDTO[], GetListPostREQ>({
+    getPosts: build.query<PaginationDTO<PostDTO>, GetListPostREQ>({
       query: (params) => ({
         url: `/Post`,
         method: HTTP_METHOD.GET,
         params,
       }),
+      // serializeQueryArgs: ({ endpointName }) => {
+      //   return endpointName;
+      // },
+      // forceRefetch({ currentArg, previousArg }) {
+      //   return currentArg !== previousArg;
+      // },
+      // merge: (currentCache, newItems) => {
+      //   const existingIds = new Set(currentCache.data.map((item) => item.id));
+
+      //   newItems.data.forEach((newItem) => {
+      //     if (!existingIds.has(newItem.id)) {
+      //       currentCache.data.push(newItem);
+      //     }
+      //   });
+
+      //   if (newItems.data.length < GET_POST_HOME_PAGE_SIZE) {
+      //     currentCache.isLastPage = true;
+      //   }
+      // },
       transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
-        return response.result.map((post) => getPostDTO(post));
+        return {
+          data: response.result.map((post) => getPostDTO(post)),
+          isLastPage: response.result.length < GET_POST_HOME_PAGE_SIZE,
+        };
       },
-      providesTags: [TAG_TYPES.POST],
+      providesTags: [
+        {
+          type: TAG_TYPES.POST,
+          id: "LIST",
+        },
+      ],
     }),
     createPost: build.mutation<void, FormData>({
       query: (body) => ({
@@ -27,9 +60,38 @@ const postApi = usersApi.injectEndpoints({
         method: HTTP_METHOD.POST,
         body,
       }),
-      invalidatesTags: [{ type: TAG_TYPES.POST }],
+      invalidatesTags: [{ type: TAG_TYPES.POST, id: "LIST" }],
+    }),
+    getPostDetail: build.query<PostDetailDTO, string>({
+      query: (id: string) => ({
+        url: `/Post/${id}`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response: BaseResponse<GetPostDetailRES>) =>
+        getPostDetailDTO(response.result),
+    }),
+    putLikePost: build.mutation<void, string>({
+      query: (id: string) => ({
+        url: `/Post/${id}/react`,
+        method: HTTP_METHOD.PUT,
+      }),
+      invalidatesTags: (result, error, id) => [
+        {
+          type: TAG_TYPES.POST,
+          id: id,
+        },
+        {
+          type: TAG_TYPES.POST,
+          id: "LIST",
+        },
+      ],
     }),
   }),
 });
 
-export const { useGetPostsQuery, useCreatePostMutation } = postApi;
+export const {
+  useGetPostsQuery,
+  useCreatePostMutation,
+  useGetPostDetailQuery,
+  usePutLikePostMutation,
+} = postApi;

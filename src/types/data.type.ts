@@ -4,6 +4,12 @@ export type BaseResponse<T> = {
   errors: [];
 };
 
+export type PaginationDTO<T> = {
+  data: T[];
+} & {
+  isLastPage: boolean;
+};
+
 export type PaginationREQ = {
   PageIndex: number;
   PageSize: number;
@@ -16,7 +22,8 @@ export type PostDTO = {
   postImages: ImageDTO[];
   likeCount: number;
   caption: string;
-  comment: CommentDTO[];
+  commentCount: number;
+  isLiked: boolean;
 };
 
 export type ImageDTO = {
@@ -61,7 +68,8 @@ export type PostDetailDTO = {
   comments: CommentDTO[];
 };
 
-export type UserDetailDTO = {
+export type ProfileDetailDTO = {
+  id: string;
   username: string;
   userDisplayName: string;
   postCount: number;

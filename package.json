@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
+    "antd": "^5.22.2",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "notistack": "^3.0.1",

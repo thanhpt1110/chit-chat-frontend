@@ -50,6 +50,7 @@ function MessagesPage() {
       <div className="border flex flex-col h-full overflow-auto">
         <div className="flex flex-row justify-between px-4 pt-8">
           <UserNameDisplay
+            id={userInfo.userId}
             className="text-blue-400"
             username={`@${userInfo.username}`}
           />

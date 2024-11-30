@@ -1,4 +1,6 @@
+import { enqueueSnackbar } from "notistack";
 import { useCallback, useState } from "react";
+import { usePutLikePostMutation } from "../data/post/post.api";
 import { formatPostTime } from "../helpers/format/date-time.format";
 import { PostDTO } from "../types/data.type";
 import { CommentOutlineIcon } from "./icons/CommentOutlineIcon";
@@ -14,9 +16,24 @@ type PostCardProps = {
   onCommentClick?: () => void;
 };
 function PostCard({ postData, onCommentClick }: PostCardProps) {
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(postData.isLiked);
 
-  const handleToggleLike = useCallback(() => {}, []);
+  const [putToggleLike] = usePutLikePostMutation();
+
+  const handleToggleLike = useCallback(() => {
+    putToggleLike(postData.id)
+      .unwrap()
+      .then(() => {
+        enqueueSnackbar("success liked", {
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        enqueueSnackbar("error", {
+          variant: "error",
+        });
+      });
+  }, [postData.id, putToggleLike]);
 
   const handleToggleSave = useCallback(() => {}, []);
   return (
@@ -28,7 +45,10 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
             src={postData.postUser.profileImage.url}
             alt={postData.postUser.username}
           />
-          <UserNameDisplay username={postData.postUser.username} />
+          <UserNameDisplay
+            id={postData.postUser.id}
+            username={postData.postUser.username}
+          />
           <div className="text-gray-400">
             {"•"} {formatPostTime(postData.postAt)}
           </div>
@@ -42,7 +62,10 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
           handleToggleLike();
         }}
       >
-        <ImageSlider images={postData.postImages.map((image) => image.url)} />
+        <ImageSlider
+          className="max-w-[400px] "
+          images={postData.postImages.map((image) => image.url)}
+        />
       </div>
       <div className="flex flex-row justify-between">
         <div className="flex flex-row justify-start gap-4 mt-1">
@@ -66,11 +89,16 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
       </div>
       <div className="flex flex-row gap-2 items-start max-w-[400px]">
         <UserNameDisplay
+          id={postData.postUser.id}
           className="text-sm"
           username={postData.postUser.username}
         />
         <span className="line-clamp-3 text-sm">{postData.caption}</span>
       </div>
+      <button
+        onClick={onCommentClick}
+        className="text-sm text-gray-500 text-start"
+      >{`View all ${postData.commentCount} comments`}</button>
     </div>
   );
 }

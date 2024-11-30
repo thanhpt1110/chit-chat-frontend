@@ -31,3 +31,13 @@ export type GetListPostRES = {
   comments: CommentRES[];
   userPosted: UserRES;
 };
+
+export type GetPostDetailRES = {
+  id: string;
+  description: string;
+  reactionCount: number;
+  commentCount: number;
+  comments: CommentRES[];
+  postMedias: PostMediaRES[];
+  userPosted: UserRES;
+};
