@@ -8,6 +8,7 @@ type UserDisplayNameAndContentProps = {
   children?: React.ReactNode;
   userAvatarUrl: string;
   imageClassName?: string;
+  id: string;
 };
 
 function UserDisplayNameAndContent({
@@ -16,6 +17,7 @@ function UserDisplayNameAndContent({
   userAvatarUrl,
   children,
   imageClassName,
+  id,
 }: UserDisplayNameAndContentProps) {
   return (
     <div className="flex flex-row w-full items-start">
@@ -26,7 +28,11 @@ function UserDisplayNameAndContent({
       />
       <div className="flex ml-2 flex-col">
         <div>
-          <UserNameDisplay className="mr-2" username={userDisplayName} />
+          <UserNameDisplay
+            id={id}
+            className="mr-2"
+            username={userDisplayName}
+          />
           <span>{content}</span>
         </div>
         {children}

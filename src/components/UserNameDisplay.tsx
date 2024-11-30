@@ -3,14 +3,15 @@ import { twMerge } from "tailwind-merge";
 import { APP_ROUTE } from "../helpers/constants/route.constant";
 
 type UserNameDisplayProps = {
+  id: string;
   username: string;
   className?: string;
 };
 
-function UserNameDisplay({ username, className }: UserNameDisplayProps) {
+function UserNameDisplay({ id, username, className }: UserNameDisplayProps) {
   const navigate = useNavigate();
   const handleNavigateToUserProfile = () => {
-    navigate(APP_ROUTE.MAIN.PROFILE(username));
+    navigate(APP_ROUTE.MAIN.PROFILE(id));
   };
 
   return (

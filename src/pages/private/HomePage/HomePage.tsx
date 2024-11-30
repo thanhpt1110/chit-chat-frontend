@@ -14,33 +14,38 @@ import PostDetailModal from "../components/PostDetailModal";
 
 const NEW_PEOPLE_SUGGESTED_DATA: UserSuggestData[] = [
   {
+    id: "1",
     avatarUrl: "https://i.pinimg.com",
     username: "user1",
     summarySuggestContent: "Suggest 1",
   },
   {
+    id: "2",
     avatarUrl: "https://i.pinimg.com",
     username: "user2",
     summarySuggestContent: "Suggest 2",
   },
   {
+    id: "3",
     avatarUrl: "https://i.pinimg.com",
     username: "user3",
     summarySuggestContent: "Suggest 3",
   },
   {
+    id: "4",
     avatarUrl: "https://i.pinimg.com",
     username: "user4",
     summarySuggestContent: "Suggest 4",
   },
   {
+    id: "5",
     avatarUrl: "https://i.pinimg.com",
     username: "user5",
     summarySuggestContent: "Suggest 5",
   },
 ];
 
-const PAGE_SIZE = 3;
+export const GET_POST_HOME_PAGE_SIZE = 3;
 
 function HomePage() {
   const scrollableRef = useRef<HTMLDivElement>(null);
@@ -56,7 +61,7 @@ function HomePage() {
 
   const getHomePostsREQ: GetListPostREQ = {
     PageIndex: currentPageIndex,
-    PageSize: PAGE_SIZE,
+    PageSize: GET_POST_HOME_PAGE_SIZE,
   };
   const {
     data: postData,
@@ -71,7 +76,7 @@ function HomePage() {
           entries[0].isIntersecting &&
           !isPostDataFetching &&
           !isPostDataLoading &&
-          postData?.length === PAGE_SIZE
+          postData?.data.length === GET_POST_HOME_PAGE_SIZE
         ) {
           console.log("Load more triggered");
           setCurrentPageIndex((prev) => prev + 1);
@@ -92,13 +97,15 @@ function HomePage() {
         observer.unobserve(bottomRef.current);
       }
     };
-  }, [isPostDataFetching, isPostDataLoading, postData?.length]);
+  }, [isPostDataFetching, isPostDataLoading, postData?.data.length]);
 
   useEffect(() => {
     if (postData) {
       setPostDataPagination((prev) => {
         const existingIds = new Set(prev.map((post) => post.id));
-        const newPosts = postData.filter((post) => !existingIds.has(post.id));
+        const newPosts = postData.data.filter(
+          (post) => !existingIds.has(post.id)
+        );
         return [...prev, ...newPosts];
       });
     }
@@ -107,7 +114,7 @@ function HomePage() {
   return (
     <div
       ref={scrollableRef}
-      className="flex h-full w-full overflow-auto justify-between flex-col"
+      className="flex h-full w-full pb-8 overflow-auto justify-between flex-col"
     >
       <div className="flex-1 flex flex-row mt-5">
         <div className="flex overflow-auto flex-col gap-8 items-center flex-1 mt-4">
@@ -131,6 +138,7 @@ function HomePage() {
           )}
         >
           <UserSummarySuggestCard
+            id={userInfo.userId}
             avatarUrl={userInfo.avatarUrl}
             username={userInfo.username}
             summarySuggestContent={userInfo.displayName}

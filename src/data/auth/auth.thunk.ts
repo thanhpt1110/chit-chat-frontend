@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserInfo } from "../../types/users.type";
 import { setUserInfo } from "../global/global.slice";
+import { usersApi } from "../usersApi.api";
+import authApi from "./auth.api";
 import { LoginRES } from "./auth.response";
 import { setIsAuthenticated } from "./auth.slice";
 
@@ -26,6 +28,9 @@ export const logoutThunk = createAsyncThunk(
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     dispatch(setIsAuthenticated(false));
+
+    dispatch(usersApi.util.resetApiState());
+    dispatch(authApi.util.resetApiState());
   }
 );
 

@@ -5,7 +5,7 @@ import { ExploreItemInListDTO } from "../../../types/data.type";
 import ExploreCard from "../components/ExploreCard";
 import PostDetailModal from "../components/PostDetailModal";
 
-const PAGE_SIZE = 9;
+export const GET_EXPLORE_LIST_PAGE_SIZE = 9;
 
 function ExplorePage() {
   const scrollableRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ function ExplorePage() {
     SearchText: "",
     IsTag: false,
     PageIndex: currentPageIndex,
-    PageSize: PAGE_SIZE,
+    PageSize: GET_EXPLORE_LIST_PAGE_SIZE,
   };
 
   const {
@@ -38,7 +38,7 @@ function ExplorePage() {
           entries[0].isIntersecting &&
           !isExploreDataFetching &&
           !isExploreDataLoading &&
-          exploreData?.length === PAGE_SIZE
+          exploreData?.data.length === GET_EXPLORE_LIST_PAGE_SIZE
         ) {
           console.log("Load more triggered");
           setCurrentPageIndex((prev) => prev + 1);
@@ -59,14 +59,13 @@ function ExplorePage() {
         observer.unobserve(bottomRef.current);
       }
     };
-  }, [isExploreDataLoading, isExploreDataFetching, exploreData?.length]);
+  }, [isExploreDataLoading, isExploreDataFetching, exploreData?.data.length]);
 
   useEffect(() => {
-    console.log("exploreData", exploreData);
     if (exploreData) {
       setExploreDataPagination((prev) => {
         const existingIds = new Set(prev.map((post) => post.postId));
-        const newPosts = exploreData.filter(
+        const newPosts = exploreData.data.filter(
           (post) => !existingIds.has(post.postId)
         );
         return [...prev, ...newPosts];
@@ -75,7 +74,10 @@ function ExplorePage() {
   }, [exploreData]);
 
   return (
-    <div ref={scrollableRef} className="flex justify-center">
+    <div
+      ref={scrollableRef}
+      className="flex h-full w-full overflow-auto justify-between items-center flex-col"
+    >
       <PostDetailModal
         postId={selectedPostId}
         onClose={() => {

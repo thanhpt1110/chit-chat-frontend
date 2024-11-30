@@ -2,8 +2,8 @@
   display: flex;
   overflow: hidden;
   position: relative;
-  width: 100%;
-  max-width: 400px;
+  max-height: 600px;
+  max-width: 600px;
 }
 
 .carousel-track {
@@ -12,9 +12,9 @@
 }
 
 .carousel-image {
-  min-width: 100%;
   object-fit: contain;
   overflow: hidden;
+  @apply min-w-full sm:w-96 sm:h-96;
 }
 
 .carousel-buttons {

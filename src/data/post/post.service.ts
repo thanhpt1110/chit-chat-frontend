@@ -1,38 +1,64 @@
-import { PostDTO } from "../../types/data.type";
-import { GetListPostRES } from "./post.response";
+import {
+  CommentDTO,
+  ImageDTO,
+  PostDetailDTO,
+  PostDTO,
+  UserDTO,
+} from "../../types/data.type";
+import { UserRES } from "../../types/users.type";
+import {
+  CommentRES,
+  GetListPostRES,
+  GetPostDetailRES,
+  PostMediaRES,
+} from "./post.response";
+
+export const getUserDTO = (data: UserRES): UserDTO => ({
+  id: data.id,
+  userDisplayName: data.displayName,
+  username: "@username",
+  profileImage: {
+    key: data.avatarUrl,
+    url: data.avatarUrl,
+  },
+});
 
 export const getPostDTO = (data: GetListPostRES): PostDTO => ({
   id: data.id,
   postAt: new Date().getTime(),
-  postUser: {
-    id: "1",
-    username: "username",
-    profileImage: {
-      key: "key1",
-      url: "https://avatar",
-    },
-    userDisplayName: "User Display Name",
-  },
+  postUser: getUserDTO(data.userPosted),
   postImages: data.postMedias.map((media) => ({
     key: media.id,
     url: media.mediaUrl,
   })),
   likeCount: data.reactionCount,
   caption: data.description,
-  comment: data.comments.map((comment) => {
-    return {
-      id: comment.id,
-      commentAt: new Date().getTime(),
-      commentUser: {
-        id: "1",
-        username: "username",
-        profileImage: {
-          key: "key1",
-          url: "https://avatar",
-        },
-        userDisplayName: "User Display Name",
-      },
-      comment: comment.content,
-    };
-  }),
+  commentCount: data.commentCount,
+  isLiked: false,
+});
+
+export const getImageDTO = (data: PostMediaRES): ImageDTO => ({
+  key: data.id,
+  url: data.mediaUrl,
+});
+
+export const getCommentDTO = (data: CommentRES): CommentDTO => ({
+  id: data.id,
+  comment: data.content,
+  commentAt: Number(data.createdOn),
+  commentUser: getUserDTO(data.userPosted),
+});
+
+export const getPostDetailDTO = (data: GetPostDetailRES): PostDetailDTO => ({
+  post: {
+    id: data.id,
+    postAt: 0,
+    postUser: getUserDTO(data.userPosted),
+    postImages: data.postMedias.map((postImage) => getImageDTO(postImage)),
+    likeCount: data.reactionCount,
+    caption: data.description,
+    commentCount: data.commentCount,
+    isLiked: false,
+  },
+  comments: data.comments.map((comment) => getCommentDTO(comment)),
 });

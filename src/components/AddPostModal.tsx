@@ -150,6 +150,7 @@ function AddPostModal() {
                     src={userInfo.avatarUrl}
                   />
                   <UserNameDisplay
+                    id={userInfo.userId}
                     className="font-medium text-sm text-blue-400"
                     username={"@" + userInfo.username}
                   />
