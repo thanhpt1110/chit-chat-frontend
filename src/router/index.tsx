@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import { APP_ROUTE } from "../helpers/constants/route.constant";
 import MainLayout from "../layouts/MainLayout";
 import PrivateRoute from "../layouts/PrivateRoute";
@@ -48,12 +48,18 @@ export const router = createBrowserRouter([
     element: <PublicRoute />,
     children: [
       {
-        path: APP_ROUTE.LOGIN,
-        element: <LoginPage />,
-      },
-      {
-        path: APP_ROUTE.SIGNUP,
-        element: <SignUpPage />,
+        path: "/",
+        element: <Outlet />,
+        children: [
+          {
+            path: APP_ROUTE.AUTH.LOGIN,
+            element: <LoginPage />,
+          },
+          {
+            path: APP_ROUTE.AUTH.SIGNUP,
+            element: <SignUpPage />,
+          },
+        ],
       },
     ],
   },

@@ -5,7 +5,7 @@ import { useAppSelector } from "../hooks/reduxHooks";
 
 function PrivateRoute() {
   const { isAuthenticated }: AuthState = useAppSelector((state) => state.auth);
-  return isAuthenticated ? <Outlet /> : <Navigate to={APP_ROUTE.LOGIN} />;
+  return isAuthenticated ? <Outlet /> : <Navigate to={APP_ROUTE.AUTH.LOGIN} />;
 }
 
 export default PrivateRoute;

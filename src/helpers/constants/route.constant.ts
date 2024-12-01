@@ -1,12 +1,14 @@
 export enum ROUTE_NAME {
-  LOGIN = "login",
-  SIGNUP = "signup",
   MAIN = "",
+  AUTH = "auth",
 }
 
 export const APP_ROUTE = {
-  LOGIN: ROUTE_NAME.LOGIN,
-  SIGNUP: ROUTE_NAME.SIGNUP,
+  AUTH: {
+    self: ROUTE_NAME.AUTH,
+    LOGIN: `/${ROUTE_NAME.AUTH}/login`,
+    SIGNUP: `/${ROUTE_NAME.AUTH}/signup`,
+  },
   MAIN: {
     self: ROUTE_NAME.MAIN,
     HOME: `${ROUTE_NAME.MAIN}`,

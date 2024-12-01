@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { logoutThunk } from "../../data/auth/auth.thunk";
@@ -10,6 +10,7 @@ import {
 import { SIDEBAR_LAYOUT } from "../../helpers/constants/layout.constant";
 import { APP_ROUTE } from "../../helpers/constants/route.constant";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { useBreakpoint } from "../../hooks/useBreakPoint";
 import {
   EXPANDED_CONTENT_TYPE,
   SIDEBAR_TITLE,
@@ -78,17 +79,24 @@ function SideBar() {
     dispatch(logoutThunk());
   }, [dispatch]);
 
+  const { isSm: isSmallLargerThanSm } = useBreakpoint("sm");
+
+  const isExpandedResponsive = useMemo(
+    () => (isSmallLargerThanSm ? isExpanded : false),
+    [isExpanded, isSmallLargerThanSm]
+  );
+
   return (
     <>
       <div
         className={twMerge(
           "border h-full flex flex-col justify-between border-gray-200 bg-white transition-all",
-          isExpanded ? "w-80" : "w-24"
+          isExpandedResponsive ? "w-80" : "w-24"
         )}
       >
         <div>
           <div className="w-full py-4 flex flex-row items-center justify-center">
-            {isExpanded ? (
+            {isExpandedResponsive ? (
               <img className="w-48" src="/ChitChatLong.svg" />
             ) : (
               <img className="w-16" src="/ChitChat.svg" />
@@ -99,7 +107,7 @@ function SideBar() {
             <SidebarButton
               activeIcon={item.activeIcon}
               isActive={activedIndex === index}
-              isExpanded={isExpanded}
+              isExpanded={isExpandedResponsive}
               key={item.title}
               icon={item.icon}
               title={item.title}
@@ -107,10 +115,10 @@ function SideBar() {
             />
           ))}
         </div>
-        <div className="border-t-black border-t-[1px]">
+        <div className="border-t-gray-300 border-t-[1px] w-full">
           <button
             onClick={handleLogout}
-            className="w-full h-12 flex flex-row ml-5 mt-4"
+            className="w-full h-full flex flex-row py-4 px-4 font-semibold text-gray-400 bg-gray-50"
           >
             Logout
           </button>
