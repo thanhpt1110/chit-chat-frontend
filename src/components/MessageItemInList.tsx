@@ -66,7 +66,7 @@ function MessageItemInList({
           </span>
           <span
             className={twMerge(
-              "text-gray-500 ml-2",
+              "text-gray-500 ml-2 text-sm",
               !isRead && "text-gray-900 font-semibold"
             )}
           >

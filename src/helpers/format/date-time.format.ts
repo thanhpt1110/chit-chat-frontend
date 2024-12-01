@@ -22,15 +22,15 @@ export const formatPostTime = (timestamp: Timestamp): string => {
   if (diffSeconds < 10) {
     return "Just now";
   } else if (diffMinutes < 1) {
-    return `${diffSeconds} seconds ago`;
+    return `${diffSeconds} s`;
   } else if (diffHours < 1) {
-    return `${diffMinutes} minutes ago`;
+    return `${diffMinutes} m`;
   } else if (diffDays < 1) {
-    return `${diffHours} hours ago`;
+    return `${diffHours} h`;
   } else if (diffWeeks < 1) {
-    return `${diffDays} days ago`;
+    return `${diffDays} d`;
   } else if (diffDays < 30) {
-    return `${diffWeeks} weeks ago`;
+    return `${diffWeeks} w`;
   } else {
     return postTime.format("YYYY.MM.DD");
   }

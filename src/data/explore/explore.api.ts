@@ -52,4 +52,5 @@ const exploreApi = usersApi.injectEndpoints({
   }),
 });
 
-export const { useGetExploreListQuery } = exploreApi;
+export const { useGetExploreListQuery, useLazyGetExploreListQuery } =
+  exploreApi;

@@ -78,3 +78,18 @@ export type ProfileDetailDTO = {
   profileImage: ImageDTO;
   bio: string;
 };
+
+export enum NOTIFICATION_TYPE {
+  LIKE_POST = "LIKE_POST",
+  LIKE_COMMENT = "LIKE_COMMENT",
+  FOLLOWING = "FOLLOWING",
+}
+
+export type NotificationDTO = {
+  id: string;
+  notificationType: NOTIFICATION_TYPE;
+  notificationAt: number;
+  userNoti: UserDTO;
+  isRead: boolean;
+  notificationContent: string;
+};

@@ -3,6 +3,7 @@ import { RootState } from "../../data";
 import { GlobalState } from "../../data/global/global.slice";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { EXPANDED_CONTENT_TYPE } from "../../types/side-bar.type";
+import NotificationBar from "./NotificationBar";
 import SearchBar from "./SearchBar";
 
 function SideBarExpandedContent() {
@@ -29,7 +30,10 @@ function SideBarExpandedContent() {
         </div>
       )}
       {sideBarExpandedContent === EXPANDED_CONTENT_TYPE.NOTIFICATIONS && (
-        <div className="text-xl font-bold">Notifications</div>
+        <div className="flex flex-col w-full">
+          <div className="text-xl font-bold">Notifications</div>
+          <NotificationBar />
+        </div>
       )}
     </div>
   );
