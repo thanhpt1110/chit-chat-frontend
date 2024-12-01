@@ -21,6 +21,7 @@ function SearchBar() {
       searchKeyword: "",
     },
   });
+  const navigate = useNavigate();
   const { control, reset, watch, handleSubmit } = formMethods;
 
   const [profileSearchData, setProfileSearchData] = useState<
@@ -30,6 +31,15 @@ function SearchBar() {
   const [getProfileSearch] = useLazyGetProfileSearchQuery();
 
   const onSubmit = async (data: SearchInput) => {
+    if (!data.searchKeyword) {
+      return;
+    }
+    if (data.searchKeyword.length > 1 && data.searchKeyword[0] === "#") {
+      navigate(APP_ROUTE.MAIN.SEARCH_POST, {
+        state: { searchKeyword: data.searchKeyword.slice(1) },
+      });
+      return;
+    }
     getProfileSearch({
       SearchText: data.searchKeyword,
       PageIndex: 0,
@@ -41,8 +51,6 @@ function SearchBar() {
       })
       .catch(() => {});
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="mt-2 w-full">
@@ -62,7 +70,7 @@ function SearchBar() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault(); // Ngăn Enter reload trang
-                      handleSubmit(onSubmit)(); // Thực hiện submit
+                      handleSubmit(onSubmit)();
                     }
                   }}
                 />

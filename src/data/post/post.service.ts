@@ -52,7 +52,7 @@ export const getCommentDTO = (data: CommentRES): CommentDTO => ({
 export const getPostDetailDTO = (data: GetPostDetailRES): PostDetailDTO => ({
   post: {
     id: data.id,
-    postAt: 0,
+    postAt: 1732428569000,
     postUser: getUserDTO(data.userPosted),
     postImages: data.postMedias.map((postImage) => getImageDTO(postImage)),
     likeCount: data.reactionCount,

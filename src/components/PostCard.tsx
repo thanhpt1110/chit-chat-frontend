@@ -49,7 +49,7 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
             id={postData.postUser.id}
             username={postData.postUser.username}
           />
-          <div className="text-gray-400">
+          <div className="text-gray-400 text-sm">
             {"•"} {formatPostTime(postData.postAt)}
           </div>
         </div>

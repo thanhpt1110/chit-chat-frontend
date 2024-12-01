@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout";
 import PrivateRoute from "../layouts/PrivateRoute";
 import PublicRoute from "../layouts/PublicRoute";
 import ExplorePage from "../pages/private/ExplorePage/ExplorePage";
+import SearchPostPage from "../pages/private/ExplorePage/SearchPostPage";
 import HomePage from "../pages/private/HomePage/HomePage";
 import MessagesPage from "../pages/private/MessagePage/MessagesPage";
 import ProfilePage from "../pages/private/ProfilePage/ProfilePage";
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
           {
             path: APP_ROUTE.MAIN.PROFILE(":id"),
             element: <ProfilePage />,
+          },
+          {
+            path: APP_ROUTE.MAIN.SEARCH_POST,
+            element: <SearchPostPage />,
           },
         ],
       },
