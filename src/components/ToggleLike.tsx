@@ -32,7 +32,7 @@ function ToggleLike({
       }}
       className={className}
     >
-      {isLiked ? (
+      {!isLiked ? (
         <LikeOutLineIcon className={twMerge("h-6 w-6", likeIconClassName)} />
       ) : (
         <LikeFillIcon

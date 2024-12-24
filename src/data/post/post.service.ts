@@ -16,7 +16,7 @@ import {
 export const getUserDTO = (data: UserRES): UserDTO => ({
   id: data.id,
   userDisplayName: data.displayName,
-  username: "@username",
+  username: data.displayName,
   profileImage: {
     key: data.avatarUrl,
     url: data.avatarUrl,
@@ -25,7 +25,7 @@ export const getUserDTO = (data: UserRES): UserDTO => ({
 
 export const getPostDTO = (data: GetListPostRES): PostDTO => ({
   id: data.id,
-  postAt: new Date().getTime(),
+  postAt: data.createdOn,
   postUser: getUserDTO(data.userPosted),
   postImages: data.postMedias.map((media) => ({
     key: media.id,
@@ -34,7 +34,7 @@ export const getPostDTO = (data: GetListPostRES): PostDTO => ({
   likeCount: data.reactionCount,
   caption: data.description,
   commentCount: data.commentCount,
-  isLiked: false,
+  isLiked: data.isReacted,
 });
 
 export const getImageDTO = (data: PostMediaRES): ImageDTO => ({
@@ -52,13 +52,13 @@ export const getCommentDTO = (data: CommentRES): CommentDTO => ({
 export const getPostDetailDTO = (data: GetPostDetailRES): PostDetailDTO => ({
   post: {
     id: data.id,
-    postAt: 1732428569000,
+    postAt: data.createdOn,
     postUser: getUserDTO(data.userPosted),
     postImages: data.postMedias.map((postImage) => getImageDTO(postImage)),
     likeCount: data.reactionCount,
     caption: data.description,
     commentCount: data.commentCount,
-    isLiked: false,
+    isLiked: data.isReacted,
   },
   comments: data.comments.map((comment) => getCommentDTO(comment)),
 });

@@ -30,6 +30,9 @@ export type GetListPostRES = {
   commentCount: number;
   comments: CommentRES[];
   userPosted: UserRES;
+  isReacted: boolean;
+  createdOn: EpochTimeStamp;
+  updatedOn: EpochTimeStamp;
 };
 
 export type GetPostDetailRES = {
@@ -40,4 +43,7 @@ export type GetPostDetailRES = {
   comments: CommentRES[];
   postMedias: PostMediaRES[];
   userPosted: UserRES;
+  isReacted: boolean;
+  createdOn: EpochTimeStamp;
+  updatedOn: EpochTimeStamp;
 };

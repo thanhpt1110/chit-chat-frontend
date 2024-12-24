@@ -9,7 +9,10 @@ import ToggleLike from "../../../components/ToggleLike";
 import ToggleSave from "../../../components/ToggleSave";
 import UserDisplayNameAndContent from "../../../components/UserDisplayNameAndContent";
 import UserNameDisplay from "../../../components/UserNameDisplay";
-import { useGetPostDetailQuery } from "../../../data/post/post.api";
+import {
+  useGetPostDetailQuery,
+  usePutLikePostMutation,
+} from "../../../data/post/post.api";
 import { formatPostTime } from "../../../helpers/format/date-time.format";
 
 type PostDetailModalProps = {
@@ -22,13 +25,19 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
     data: postDetailData,
     isLoading,
     isFetching,
+    refetch,
   } = useGetPostDetailQuery(postId || "", {
     skip: !postId,
   });
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
-  const handleToggleLike = useCallback(() => {}, []);
+  const [putToggleLike] = usePutLikePostMutation();
+
+  const handleToggleLike = useCallback(() => {
+    putToggleLike(postId || "").unwrap();
+    refetch();
+  }, [postId, putToggleLike, refetch]);
 
   const handleToggleSave = useCallback(() => {}, []);
 
@@ -129,7 +138,7 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
                         <div className="flex flex-row justify-start gap-4 mt-1">
                           <ToggleLike
                             className="hover:opacity-50"
-                            likeControlFromParent={isLiked}
+                            likeControlFromParent={postDetailData.post.isLiked}
                             handleToggleLike={handleToggleLike}
                           />
                           <CommentOutlineIcon className="cursor-pointer hover:opacity-50" />
