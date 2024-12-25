@@ -73,6 +73,7 @@ const VideoCall: React.FC = () => {
     connectionRef.current = connection;
 
     connection.on("ReceiveOffer", async (connectionId, sdp) => {
+      console.log("Received Offer:", sdp);
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription({ type: "offer", sdp })
       );
@@ -90,6 +91,7 @@ const VideoCall: React.FC = () => {
     });
 
     connection.on("ReceiveAnswer", async (connectionId, sdp) => {
+      console.log("Received Answer:", sdp);
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription({ type: "answer", sdp })
       );
@@ -129,13 +131,16 @@ const VideoCall: React.FC = () => {
     });
 
     connection.start().then(() => {
+      console.log("SignalR connection established");
       connection
         .invoke(WEB_SOCKET_EVENT.JOIN_CONVERSATION_GROUP, conversationId)
         .then(() => {
+          console.log("Joined conversation group:", conversationId);
           const createOffer = async () => {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
             connection.invoke("SendOffer", conversationId, offer.sdp);
+            console.log("Sent Offer:", offer.sdp);
           };
 
           createOffer();
