@@ -19,7 +19,14 @@ const VideoCall: React.FC = () => {
 
   useEffect(() => {
     const servers = {
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: "turn:your.turn.server:3478",
+          username: "your-username",
+          credential: "your-credential",
+        },
+      ],
     };
     const peerConnection = new RTCPeerConnection(servers);
     peerConnectionRef.current = peerConnection;
