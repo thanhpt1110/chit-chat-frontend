@@ -8,6 +8,7 @@ import SearchPostPage from "../pages/private/ExplorePage/SearchPostPage";
 import HomePage from "../pages/private/HomePage/HomePage";
 import MessagesPage from "../pages/private/MessagePage/MessagesPage";
 import ProfilePage from "../pages/private/ProfilePage/ProfilePage";
+import VideoCall from "../pages/private/VideoCall/VideoCall";
 import LoginPage from "../pages/public/LoginPage";
 import SignUpPage from "../pages/public/SignUpPage";
 
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
           {
             path: APP_ROUTE.MAIN.SEARCH_POST,
             element: <SearchPostPage />,
+          },
+          {
+            path: APP_ROUTE.MAIN.VIDEO(":conversationId"),
+            element: <VideoCall />,
           },
         ],
       },

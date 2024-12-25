@@ -16,5 +16,7 @@ export const APP_ROUTE = {
     MESSAGES: `${ROUTE_NAME.MAIN}/messages`,
     PROFILE: (id: string) => `${ROUTE_NAME.MAIN}/profile/${id}`,
     SEARCH_POST: `${ROUTE_NAME.MAIN}/search-post`,
+    VIDEO: (conversationId: string) =>
+      `${ROUTE_NAME.MAIN}/video/${conversationId}`,
   },
 };
