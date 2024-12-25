@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useGetExploreListQuery } from "../../../data/explore/explore.api";
-import { GetListExploreREQ } from "../../../data/explore/explore.request";
 import { ExploreItemInListDTO } from "../../../types/data.type";
 import ExploreCard from "../components/ExploreCard";
 import PostDetailModal from "../components/PostDetailModal";
@@ -18,18 +17,16 @@ function ExplorePage() {
   >([]);
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
 
-  const getExploreREQ: GetListExploreREQ = {
-    SearchText: "",
-    IsTag: false,
-    PageIndex: currentPageIndex,
-    PageSize: GET_EXPLORE_LIST_PAGE_SIZE,
-  };
-
   const {
     data: exploreData,
     isLoading: isExploreDataLoading,
     isFetching: isExploreDataFetching,
-  } = useGetExploreListQuery(getExploreREQ);
+  } = useGetExploreListQuery({
+    SearchText: undefined,
+    IsTag: false,
+    PageIndex: currentPageIndex,
+    PageSize: GET_EXPLORE_LIST_PAGE_SIZE,
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,6 +68,10 @@ function ExplorePage() {
         return [...prev, ...newPosts];
       });
     }
+  }, [exploreData]);
+
+  useEffect(() => {
+    console.log("first render", exploreData);
   }, [exploreData]);
 
   return (

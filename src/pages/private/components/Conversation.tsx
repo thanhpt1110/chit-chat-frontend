@@ -129,9 +129,15 @@ function Conversation({
             <button onClick={() => {}}>
               <PhoneCallOutlineIcon />
             </button>
-            <button onClick={() => {}}>
+            <button
+              onClick={() => {
+                const videoCallUrl = `/video/${conversationId}`;
+                window.open(videoCallUrl, "_blank", "width=800,height=600");
+              }}
+            >
               <VideoCallOutlineIcon />
             </button>
+
             <button
               onClick={() => {
                 setIsShowConversationInfoExpanded((prev) => !prev);
