@@ -20,11 +20,42 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     const servers = {
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:ss-turn2.xirsys.com" },
         {
-          urls: "turn:your.turn.server:3478",
-          username: "your-username",
-          credential: "your-credential",
+          urls: "turn:ss-turn2.xirsys.com:80?transport=udp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+        },
+        {
+          urls: "turn:ss-turn2.xirsys.com:3478?transport=udp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+        },
+        {
+          urls: "turn:ss-turn2.xirsys.com:80?transport=tcp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+        },
+        {
+          urls: "turn:ss-turn2.xirsys.com:3478?transport=tcp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+        },
+        {
+          urls: "turns:ss-turn2.xirsys.com:443?transport=tcp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+        },
+        {
+          urls: "turns:ss-turn2.xirsys.com:5349?transport=tcp",
+          username:
+            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
+          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
         },
       ],
     };
@@ -72,9 +103,21 @@ const VideoCall: React.FC = () => {
       }
     });
 
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        console.log("Sending ICE candidate:", event.candidate);
+        connection.invoke(
+          "SendIceCandidate",
+          conversationId,
+          JSON.stringify(event.candidate)
+        );
+      }
+    };
+
     connection.on("ReceiveIceCandidate", async (connectionId, candidate) => {
       try {
         const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
+        console.log("Received ICE candidate:", iceCandidate);
         if (peerConnection.remoteDescription) {
           await peerConnection.addIceCandidate(iceCandidate);
         } else {
@@ -108,6 +151,16 @@ const VideoCall: React.FC = () => {
         stream
           .getTracks()
           .forEach((track) => peerConnection.addTrack(track, stream));
+      })
+      .catch((error) => {
+        if (error.name === "NotReadableError") {
+          console.error("Device is already in use:", error);
+          alert(
+            "Camera or microphone is already in use by another application."
+          );
+        } else {
+          console.error("Error accessing media devices:", error);
+        }
       });
 
     peerConnection.ontrack = (event) => {
