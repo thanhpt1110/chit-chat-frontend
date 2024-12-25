@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "^2.3.0",
     "antd": "^5.22.2",
     "dayjs": "^1.11.13",

@@ -45,6 +45,7 @@ export type MessageDTO = {
 };
 
 export type ConversationDTO = {
+  conversationId: string;
   senderId: string;
   message: MessageDTO;
 };

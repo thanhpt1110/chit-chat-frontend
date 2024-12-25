@@ -1,12 +1,32 @@
 import { useState } from "react";
 import { ShareOutlineIcon } from "../../../components/icons/ShareOutlineIcon";
+import { usePostAddNewMessageMutation } from "../../../data/conversation/conversation.api";
 
 type ChatInputProps = {
-  handleSendMessage: (newMessage: string) => void;
+  conversationId: string;
 };
 
-function ChatInput({ handleSendMessage }: ChatInputProps) {
+function ChatInput({ conversationId }: ChatInputProps) {
   const [newMessage, setNewMessage] = useState<string>("");
+
+  const [postAddNewMessage] = usePostAddNewMessageMutation();
+
+  const handleAddMessage = async () => {
+    if (newMessage.trim() !== "") {
+      await postAddNewMessage({
+        conversationId: conversationId,
+        messageText: newMessage,
+      })
+        .unwrap()
+        .catch((error) => {
+          console.error("Error adding new message:", error);
+        })
+        .then(() => {
+          setNewMessage("");
+        });
+    }
+  };
+
   return (
     <div className="flex flex-row px-4 py-4 gap-3">
       <input
@@ -16,12 +36,7 @@ function ChatInput({ handleSendMessage }: ChatInputProps) {
         placeholder="Type a message"
         type="text"
       />
-      <button
-        onClick={() => {
-          handleSendMessage(newMessage);
-          setNewMessage("");
-        }}
-      >
+      <button onClick={handleAddMessage}>
         <ShareOutlineIcon className="h-5 w-5" />
       </button>
     </div>

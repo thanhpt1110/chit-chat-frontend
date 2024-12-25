@@ -55,8 +55,15 @@ function ProfilePage() {
               <div className="text-lg font-medium">
                 @{userDetailData?.username}
               </div>
-              <ActionButton title="Edit Profile" onClick={() => {}} />
-              <ActionButton title="View Archive" onClick={() => {}} />
+              {
+                // Add ActionButton component here
+                userDetailData?.id === userInfo.userId && (
+                  <>
+                    <ActionButton title="Edit Profile" onClick={() => {}} />
+                    <ActionButton title="View Archive" onClick={() => {}} />
+                  </>
+                )
+              }
             </div>
             <div className="flex flex-row gap-16 mt-4">
               <div className="flex flex-row gap-1">

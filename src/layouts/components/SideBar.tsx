@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { logoutThunk } from "../../data/auth/auth.thunk";
@@ -85,6 +85,21 @@ function SideBar() {
     () => (isSmallLargerThanSm ? isExpanded : false),
     [isExpanded, isSmallLargerThanSm]
   );
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path === APP_ROUTE.MAIN.HOME) {
+      setActivedIndex(0);
+    } else if (path === APP_ROUTE.MAIN.EXPLORE) {
+      setActivedIndex(2);
+    } else if (path === APP_ROUTE.MAIN.MESSAGES) {
+      setActivedIndex(4);
+      setIsExpanded(false);
+      dispatch(setSideBarExpandedContent(EXPANDED_CONTENT_TYPE.MESSAGES));
+    } else if (path === APP_ROUTE.MAIN.PROFILE(userInfo.userId)) {
+      setActivedIndex(5);
+    }
+  }, [dispatch, userInfo.userId]);
 
   return (
     <>
