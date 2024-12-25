@@ -113,6 +113,33 @@ function SearchBar() {
               </div>
             </button>
           ))}
+        {profileSearchData &&
+          profileSearchData.length === 0 &&
+          watch("searchKeyword") && (
+            <div className="flex flex-col items-center justify-center mt-16">
+              <ImageWithFallback
+                className="h-24 w-24 opacity-40"
+                src="/assets/images/empty-message.svg"
+                alt="empty-message"
+              />
+              <div className="text-center text-gray-500 mx-16 mt-4">
+                No results found. Try searching for other people or posts.
+              </div>
+            </div>
+          )}
+
+        {!watch("searchKeyword") && (
+          <div className="flex flex-col items-center justify-center mt-16">
+            <ImageWithFallback
+              className="h-24 w-24 opacity-40"
+              src="/assets/images/search.svg"
+              alt="search"
+            />
+            <div className="text-center text-gray-500 mx-16 mt-4">
+              Search for people or posts by typing in the search bar above.
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

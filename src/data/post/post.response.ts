@@ -32,12 +32,4 @@ export type GetListPostRES = {
   userPosted: UserRES;
 };
 
-export type GetPostDetailRES = {
-  id: string;
-  description: string;
-  reactionCount: number;
-  commentCount: number;
-  comments: CommentRES[];
-  postMedias: PostMediaRES[];
-  userPosted: UserRES;
-};
+export type GetPostDetailRES = GetListPostRES;

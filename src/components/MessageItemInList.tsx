@@ -1,5 +1,9 @@
+import { HubConnection } from "@microsoft/signalr";
+import { Dispatch, SetStateAction } from "react";
 import { twMerge } from "tailwind-merge";
+import { WEB_SOCKET_EVENT } from "../helpers/constants/websocket-event.constant";
 import { formatPostTime } from "../helpers/format/date-time.format";
+import { UserDTO } from "../types/data.type";
 import ImageWithFallback from "./ImageWithFallback";
 
 export type MessageItemInListDTO = {
@@ -10,68 +14,93 @@ export type MessageItemInListDTO = {
   userDisplayName: string;
   userImageUrl: string;
   fromMe: boolean;
+  receiverId: string;
 };
 
 type MessageItemInListProps = {
   isActive: boolean;
   onCurrentSelectedMessage: (messageId: string) => void;
-} & MessageItemInListDTO;
+  setChatter: Dispatch<SetStateAction<UserDTO | undefined>>;
+  messageItemData: MessageItemInListDTO;
+  connection: HubConnection | null;
+};
 
 function MessageItemInList({
-  messageId,
-  latestMessage,
-  time,
-  isRead,
-  userDisplayName,
-  userImageUrl,
-  fromMe,
   onCurrentSelectedMessage,
   isActive,
+  setChatter,
+  messageItemData,
+  connection,
 }: MessageItemInListProps) {
   return (
     <button
-      onClick={() => onCurrentSelectedMessage(messageId)}
+      onClick={() => {
+        onCurrentSelectedMessage(messageItemData.messageId);
+        setChatter({
+          id: messageItemData.receiverId,
+          username: messageItemData.userDisplayName,
+          userDisplayName: messageItemData.userDisplayName,
+          profileImage: {
+            key: messageItemData.userImageUrl,
+            url: messageItemData.userImageUrl,
+          },
+        });
+        connection
+          ?.invoke(
+            WEB_SOCKET_EVENT.JOIN_CONVERSATION_GROUP,
+            messageItemData.messageId
+          )
+          .catch((error) => console.error("Error:", error));
+      }}
       className={twMerge(
-        "flex flex-row w-full md:w-96 gap-2 px-4 py-3 hover:bg-gray-100 text-start",
+        "flex flex-row gap-2 w-full py-3 rounded-xl hover:bg-gray-100 text-start",
         isActive && "bg-gray-100"
       )}
     >
       <ImageWithFallback
         className="h-12 w-12 rounded-full"
-        src={userImageUrl}
+        src={messageItemData.userImageUrl}
         alt="userImage"
       />
-      <div className={twMerge("flex-col")}>
-        <div className={twMerge(!isRead && "text-gray-900 font-semibold")}>
-          {userDisplayName}
+      <div className={twMerge("flex-col flex-nowrap")}>
+        <div
+          className={twMerge(
+            !messageItemData.isRead && "text-gray-900 font-semibold"
+          )}
+        >
+          {messageItemData.userDisplayName}
         </div>
         <div
           className={twMerge(
-            "text-sm",
-            !isRead && "font-semibold text-gray-900"
+            "text-sm flex flex-row gap-1",
+            !messageItemData.isRead && "font-semibold text-gray-900"
           )}
         >
-          {fromMe && (
-            <span
+          {messageItemData.fromMe && (
+            <div
               className={twMerge(
                 "text-gray-400",
-                !isRead && "text-gray-900 font-semibold"
+                !messageItemData.isRead && "text-gray-900 font-semibold"
               )}
             >
               You:{" "}
-            </span>
+            </div>
           )}
-          <span className={twMerge(!isRead && "text-gray-900 font-semibold")}>
-            {latestMessage}
-          </span>
-          <span
+          <div
             className={twMerge(
-              "text-gray-500 ml-2 text-sm",
-              !isRead && "text-gray-900 font-semibold"
+              !messageItemData.isRead && "text-gray-900 font-semibold"
             )}
           >
-            • {formatPostTime(time)}
-          </span>
+            {messageItemData.latestMessage}
+          </div>
+          <div
+            className={twMerge(
+              "text-gray-500 ml-2 text-sm text-nowrap",
+              !messageItemData.isRead && "text-gray-900 font-semibold"
+            )}
+          >
+            • {formatPostTime(messageItemData.time)}
+          </div>
         </div>
       </div>
     </button>
