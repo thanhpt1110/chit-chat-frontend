@@ -4,7 +4,7 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { socketBaseUrl } from "../../../helpers/constants/configs.constant";
 import { WEB_SOCKET_EVENT } from "../../../helpers/constants/websocket-event.constant";
@@ -16,6 +16,11 @@ const VideoCall: React.FC = () => {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const connectionRef = useRef<HubConnection | null>(null);
   const iceCandidatesQueue = useRef<RTCIceCandidate[]>([]);
+  const screenStreamRef = useRef<MediaStream | null>(null); // Ref để lưu stream màn hình
+
+  const [isMuted, setIsMuted] = useState(true); // Trạng thái mic
+  const [isScreenSharing, setIsScreenSharing] = useState(false); // Trạng thái chia sẻ màn hình
+  const [isCameraOn, setIsCameraOn] = useState(true); // Trạng thái camera
 
   useEffect(() => {
     const servers = {
@@ -36,9 +41,7 @@ const VideoCall: React.FC = () => {
         },
       ],
     };
-    console.log("STUN/TURN servers configured:", servers);
 
-    // Khởi tạo peerConnection
     const peerConnection = new RTCPeerConnection(servers);
     peerConnectionRef.current = peerConnection;
 
@@ -72,9 +75,6 @@ const VideoCall: React.FC = () => {
       );
     };
 
-    console.log("Peer connection created:", peerConnection);
-
-    // Khởi tạo connection SignalR
     const connection = new HubConnectionBuilder()
       .withUrl(`${socketBaseUrl}/hubs/conversation`, {
         skipNegotiation: true,
@@ -85,7 +85,6 @@ const VideoCall: React.FC = () => {
       .build();
     connectionRef.current = connection;
 
-    // Nhận Offer từ đối tác
     connection.on(WEB_SOCKET_EVENT.RECEIVE_OFFER, async (connectionId, sdp) => {
       console.log("Received Offer:", sdp);
       await peerConnection.setRemoteDescription(
@@ -98,13 +97,6 @@ const VideoCall: React.FC = () => {
         conversationId,
         answer.sdp
       );
-      connection.invoke(
-        WEB_SOCKET_EVENT.SEND_ANSWER,
-        conversationId,
-        answer.sdp
-      );
-
-      // Xử lý hàng đợi ICE candidates
       while (iceCandidatesQueue.current.length > 0) {
         const candidate = iceCandidatesQueue.current.shift();
         if (candidate) {
@@ -113,7 +105,6 @@ const VideoCall: React.FC = () => {
       }
     });
 
-    // Nhận Answer từ đối tác
     connection.on(
       WEB_SOCKET_EVENT.RECEIVE_ANSWER,
       async (connectionId, sdp) => {
@@ -121,8 +112,6 @@ const VideoCall: React.FC = () => {
         await peerConnection.setRemoteDescription(
           new RTCSessionDescription({ type: "answer", sdp })
         );
-
-        // Xử lý hàng đợi ICE candidates
         while (iceCandidatesQueue.current.length > 0) {
           const candidate = iceCandidatesQueue.current.shift();
           if (candidate) {
@@ -132,7 +121,6 @@ const VideoCall: React.FC = () => {
       }
     );
 
-    // Nhận ICE candidate
     connection.on(
       WEB_SOCKET_EVENT.RECEIVE_ICE_CANDIDATE,
       async (connectionId, candidate) => {
@@ -150,15 +138,12 @@ const VideoCall: React.FC = () => {
       }
     );
 
-    // Khởi tạo kết nối SignalR
     connection.start().then(() => {
       console.log("SignalR connection established");
       connection
         .invoke(WEB_SOCKET_EVENT.JOIN_CONVERSATION_GROUP, conversationId)
         .then(() => {
           console.log("Joined conversation group:", conversationId);
-
-          // Gửi Offer khi kết nối thành công
           const createOffer = async () => {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
@@ -167,19 +152,12 @@ const VideoCall: React.FC = () => {
               conversationId,
               offer.sdp
             );
-            connection.invoke(
-              WEB_SOCKET_EVENT.SEND_OFFER,
-              conversationId,
-              offer.sdp
-            );
             console.log("Sent Offer:", offer.sdp);
           };
-
           createOffer();
         });
     });
 
-    // Lấy media và thêm track vào peerConnection
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -192,15 +170,12 @@ const VideoCall: React.FC = () => {
       })
       .catch((error) => {
         if (error.name === "NotReadableError") {
-          console.error("Device is already in use:", error);
-          alert("Microphone is already in use by another application.");
           alert("Microphone is already in use by another application.");
         } else {
           console.error("Error accessing media devices:", error);
         }
       });
 
-    // Lắng nghe track từ remote peer
     peerConnection.ontrack = (event) => {
       const [stream] = event.streams;
       if (remoteVideoRef.current) {
@@ -208,12 +183,93 @@ const VideoCall: React.FC = () => {
       }
     };
 
-    // Clean up khi component bị unmount
     return () => {
       peerConnection.close();
       connection.stop();
+      if (screenStreamRef.current) {
+        screenStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
     };
   }, [conversationId]);
+
+  const toggleMute = () => {
+    if (localVideoRef.current?.srcObject) {
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      stream.getAudioTracks().forEach((track) => {
+        track.enabled = !isMuted;
+      });
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const startScreenShare = async () => {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+
+      // Lắng nghe sự kiện khi stream bị hủy
+      screenStream.getVideoTracks()[0].onended = () => {
+        console.log("Screen share stopped by user from popup.");
+        setIsScreenSharing(false); // Cập nhật trạng thái là không còn chia sẻ màn hình
+      };
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = screenStream;
+      }
+
+      // Thêm track của màn hình vào peer connection
+      screenStream.getTracks().forEach((track) => {
+        peerConnectionRef.current?.addTrack(track, screenStream);
+      });
+
+      setIsScreenSharing(true);
+      screenStreamRef.current = screenStream; // Lưu lại stream chia sẻ màn hình
+    } catch (error) {
+      console.error("Error sharing screen:", error);
+    }
+  };
+
+  const stopScreenShare = () => {
+    if (screenStreamRef.current) {
+      // Dừng tất cả các track của stream màn hình
+      screenStreamRef.current.getTracks().forEach((track) => track.stop());
+      setIsScreenSharing(false);
+
+      // Khôi phục lại camera
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+          }
+
+          // Thêm lại các track của stream camera vào peer connection
+          stream.getTracks().forEach((track) => {
+            peerConnectionRef.current?.addTrack(track, stream);
+          });
+
+          // Kiểm tra trạng thái isCameraOn và bật/tắt camera dựa trên giá trị của nó
+          if (!isCameraOn) {
+            // Tắt camera nếu isCameraOn là false
+            const videoTrack = stream.getVideoTracks()[0];
+            videoTrack.enabled = false; // Tắt camera
+          }
+        })
+        .catch((error) => {
+          console.error("Error accessing media devices:", error);
+        });
+    }
+  };
+
+  const toggleCamera = () => {
+    if (localVideoRef.current?.srcObject) {
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      const videoTrack = stream.getVideoTracks()[0];
+      videoTrack.enabled = !isCameraOn;
+      setIsCameraOn(!isCameraOn);
+    }
+  };
 
   return (
     <div>
@@ -236,6 +292,17 @@ const VideoCall: React.FC = () => {
             style={{ width: "300px", background: "black" }}
           />
         </div>
+      </div>
+      <div className="flex gap-4 mt-4">
+        <button onClick={toggleMute}>{isMuted ? "Mute" : "Unmute"}</button>
+        {isScreenSharing ? (
+          <button onClick={stopScreenShare}>Stop Screen Share</button>
+        ) : (
+          <button onClick={startScreenShare}>Share Screen</button>
+        )}
+        <button onClick={toggleCamera}>
+          {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
+        </button>
       </div>
     </div>
   );
