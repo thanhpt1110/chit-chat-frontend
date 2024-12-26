@@ -20,47 +20,30 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     const servers = {
       iceServers: [
-        { urls: "stun:ss-turn2.xirsys.com" },
         {
-          urls: "turn:ss-turn2.xirsys.com:80?transport=udp",
-          username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+          urls: ["stun:hk-turn1.xirsys.com"],
         },
         {
-          urls: "turn:ss-turn2.xirsys.com:3478?transport=udp",
           username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
-        },
-        {
-          urls: "turn:ss-turn2.xirsys.com:80?transport=tcp",
-          username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
-        },
-        {
-          urls: "turn:ss-turn2.xirsys.com:3478?transport=tcp",
-          username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
-        },
-        {
-          urls: "turns:ss-turn2.xirsys.com:443?transport=tcp",
-          username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
-        },
-        {
-          urls: "turns:ss-turn2.xirsys.com:5349?transport=tcp",
-          username:
-            "sEzH9Tk29cZh_y5SJWmPnEKrvf9baguT_Nrl3U7vr0xLUDPZvjk39Cw9AaBDAx50AAAAAGdsBNh0aGFuaHB0MTExMA==",
-          credential: "f4cf697a-c2c1-11ef-b060-0242ac140004",
+            "t1v73xZPzrQUPUYowwXemStxpbhCDT3aafFfGTzjGMmsR929Wrjs20Ujnd5bBeiOAAAAAGdtFGt0aGFuaHB0MTExMA==",
+          credential: "d3e1521c-c363-11ef-8aef-0242ac120004",
+          urls: [
+            "turn:hk-turn1.xirsys.com:80?transport=udp",
+            "turn:hk-turn1.xirsys.com:3478?transport=udp",
+            "turn:hk-turn1.xirsys.com:80?transport=tcp",
+            "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+            "turns:hk-turn1.xirsys.com:443?transport=tcp",
+            "turns:hk-turn1.xirsys.com:5349?transport=tcp",
+          ],
         },
       ],
     };
+    console.log("STUN/TURN servers configured:", servers);
+
     const peerConnection = new RTCPeerConnection(servers);
     peerConnectionRef.current = peerConnection;
+
+    console.log("Peer connection created:", peerConnection);
 
     const connection = new HubConnectionBuilder()
       .withUrl(`${socketBaseUrl}/hubs/conversation`, {
@@ -72,28 +55,17 @@ const VideoCall: React.FC = () => {
       .build();
     connectionRef.current = connection;
 
-    connection.on("ReceiveOffer", async (connectionId, sdp) => {
+    connection.on(WEB_SOCKET_EVENT.RECEIVE_OFFER, async (connectionId, sdp) => {
       console.log("Received Offer:", sdp);
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription({ type: "offer", sdp })
       );
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
-      connection.invoke("SendAnswer", conversationId, answer.sdp);
-
-      // Xử lý hàng đợi ICE candidates
-      while (iceCandidatesQueue.current.length > 0) {
-        const candidate = iceCandidatesQueue.current.shift();
-        if (candidate) {
-          await peerConnection.addIceCandidate(candidate);
-        }
-      }
-    });
-
-    connection.on("ReceiveAnswer", async (connectionId, sdp) => {
-      console.log("Received Answer:", sdp);
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription({ type: "answer", sdp })
+      connection.invoke(
+        WEB_SOCKET_EVENT.SEND_ANSWER,
+        conversationId,
+        answer.sdp
       );
 
       // Xử lý hàng đợi ICE candidates
@@ -105,30 +77,51 @@ const VideoCall: React.FC = () => {
       }
     });
 
+    connection.on(
+      WEB_SOCKET_EVENT.RECEIVE_ANSWER,
+      async (connectionId, sdp) => {
+        console.log("Received Answer:", sdp);
+        await peerConnection.setRemoteDescription(
+          new RTCSessionDescription({ type: "answer", sdp })
+        );
+
+        // Xử lý hàng đợi ICE candidates
+        while (iceCandidatesQueue.current.length > 0) {
+          const candidate = iceCandidatesQueue.current.shift();
+          if (candidate) {
+            await peerConnection.addIceCandidate(candidate);
+          }
+        }
+      }
+    );
+
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         console.log("Sending ICE candidate:", event.candidate);
         connection.invoke(
-          "SendIceCandidate",
+          WEB_SOCKET_EVENT.SEND_ICE_CANDIDATE,
           conversationId,
           JSON.stringify(event.candidate)
         );
       }
     };
 
-    connection.on("ReceiveIceCandidate", async (connectionId, candidate) => {
-      try {
-        const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
-        console.log("Received ICE candidate:", iceCandidate);
-        if (peerConnection.remoteDescription) {
-          await peerConnection.addIceCandidate(iceCandidate);
-        } else {
-          iceCandidatesQueue.current.push(iceCandidate);
+    connection.on(
+      WEB_SOCKET_EVENT.RECEIVE_ICE_CANDIDATE,
+      async (connectionId, candidate) => {
+        try {
+          const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
+          console.log("Received ICE candidate:", iceCandidate);
+          if (peerConnection.remoteDescription) {
+            await peerConnection.addIceCandidate(iceCandidate);
+          } else {
+            iceCandidatesQueue.current.push(iceCandidate);
+          }
+        } catch (error) {
+          console.error("Error adding received ICE candidate", error);
         }
-      } catch (error) {
-        console.error("Error adding received ICE candidate", error);
       }
-    });
+    );
 
     connection.start().then(() => {
       console.log("SignalR connection established");
@@ -139,7 +132,11 @@ const VideoCall: React.FC = () => {
           const createOffer = async () => {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            connection.invoke("SendOffer", conversationId, offer.sdp);
+            connection.invoke(
+              WEB_SOCKET_EVENT.SEND_OFFER,
+              conversationId,
+              offer.sdp
+            );
             console.log("Sent Offer:", offer.sdp);
           };
 
@@ -160,9 +157,7 @@ const VideoCall: React.FC = () => {
       .catch((error) => {
         if (error.name === "NotReadableError") {
           console.error("Device is already in use:", error);
-          alert(
-            "Camera or microphone is already in use by another application."
-          );
+          alert("Microphone is already in use by another application.");
         } else {
           console.error("Error accessing media devices:", error);
         }
@@ -172,16 +167,6 @@ const VideoCall: React.FC = () => {
       const [stream] = event.streams;
       if (remoteVideoRef.current) {
         remoteVideoRef.current.srcObject = stream;
-      }
-    };
-
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        connection.invoke(
-          "SendIceCandidate",
-          conversationId,
-          JSON.stringify(event.candidate)
-        );
       }
     };
 
