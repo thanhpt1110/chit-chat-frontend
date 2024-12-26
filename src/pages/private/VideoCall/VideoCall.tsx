@@ -20,9 +20,7 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     const servers = {
       iceServers: [
-        {
-          urls: ["stun:hk-turn1.xirsys.com"],
-        },
+        { urls: ["stun:hk-turn1.xirsys.com"] },
         {
           username:
             "t1v73xZPzrQUPUYowwXemStxpbhCDT3aafFfGTzjGMmsR929Wrjs20Ujnd5bBeiOAAAAAGdtFGt0aGFuaHB0MTExMA==",
@@ -40,11 +38,43 @@ const VideoCall: React.FC = () => {
     };
     console.log("STUN/TURN servers configured:", servers);
 
+    // Khởi tạo peerConnection
     const peerConnection = new RTCPeerConnection(servers);
     peerConnectionRef.current = peerConnection;
 
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        console.log("Sending ICE candidate:", event.candidate);
+        connectionRef.current?.invoke(
+          WEB_SOCKET_EVENT.SEND_ICE_CANDIDATE,
+          conversationId,
+          JSON.stringify(event.candidate)
+        );
+      }
+    };
+
+    peerConnection.oniceconnectionstatechange = () => {
+      console.log("ICE connection state:", peerConnection.iceConnectionState);
+    };
+
+    peerConnection.onconnectionstatechange = () => {
+      console.log("Peer connection state:", peerConnection.connectionState);
+    };
+
+    peerConnection.onnegotiationneeded = async () => {
+      console.log("Negotiation needed");
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+      connectionRef.current?.invoke(
+        WEB_SOCKET_EVENT.SEND_OFFER,
+        conversationId,
+        offer.sdp
+      );
+    };
+
     console.log("Peer connection created:", peerConnection);
 
+    // Khởi tạo connection SignalR
     const connection = new HubConnectionBuilder()
       .withUrl(`${socketBaseUrl}/hubs/conversation`, {
         skipNegotiation: true,
@@ -55,6 +85,7 @@ const VideoCall: React.FC = () => {
       .build();
     connectionRef.current = connection;
 
+    // Nhận Offer từ đối tác
     connection.on(WEB_SOCKET_EVENT.RECEIVE_OFFER, async (connectionId, sdp) => {
       console.log("Received Offer:", sdp);
       await peerConnection.setRemoteDescription(
@@ -62,6 +93,11 @@ const VideoCall: React.FC = () => {
       );
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
+      connection.invoke(
+        WEB_SOCKET_EVENT.SEND_ANSWER,
+        conversationId,
+        answer.sdp
+      );
       connection.invoke(
         WEB_SOCKET_EVENT.SEND_ANSWER,
         conversationId,
@@ -77,6 +113,7 @@ const VideoCall: React.FC = () => {
       }
     });
 
+    // Nhận Answer từ đối tác
     connection.on(
       WEB_SOCKET_EVENT.RECEIVE_ANSWER,
       async (connectionId, sdp) => {
@@ -95,17 +132,7 @@ const VideoCall: React.FC = () => {
       }
     );
 
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        console.log("Sending ICE candidate:", event.candidate);
-        connection.invoke(
-          WEB_SOCKET_EVENT.SEND_ICE_CANDIDATE,
-          conversationId,
-          JSON.stringify(event.candidate)
-        );
-      }
-    };
-
+    // Nhận ICE candidate
     connection.on(
       WEB_SOCKET_EVENT.RECEIVE_ICE_CANDIDATE,
       async (connectionId, candidate) => {
@@ -123,15 +150,23 @@ const VideoCall: React.FC = () => {
       }
     );
 
+    // Khởi tạo kết nối SignalR
     connection.start().then(() => {
       console.log("SignalR connection established");
       connection
         .invoke(WEB_SOCKET_EVENT.JOIN_CONVERSATION_GROUP, conversationId)
         .then(() => {
           console.log("Joined conversation group:", conversationId);
+
+          // Gửi Offer khi kết nối thành công
           const createOffer = async () => {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
+            connection.invoke(
+              WEB_SOCKET_EVENT.SEND_OFFER,
+              conversationId,
+              offer.sdp
+            );
             connection.invoke(
               WEB_SOCKET_EVENT.SEND_OFFER,
               conversationId,
@@ -144,6 +179,7 @@ const VideoCall: React.FC = () => {
         });
     });
 
+    // Lấy media và thêm track vào peerConnection
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -158,11 +194,13 @@ const VideoCall: React.FC = () => {
         if (error.name === "NotReadableError") {
           console.error("Device is already in use:", error);
           alert("Microphone is already in use by another application.");
+          alert("Microphone is already in use by another application.");
         } else {
           console.error("Error accessing media devices:", error);
         }
       });
 
+    // Lắng nghe track từ remote peer
     peerConnection.ontrack = (event) => {
       const [stream] = event.streams;
       if (remoteVideoRef.current) {
@@ -170,6 +208,7 @@ const VideoCall: React.FC = () => {
       }
     };
 
+    // Clean up khi component bị unmount
     return () => {
       peerConnection.close();
       connection.stop();
