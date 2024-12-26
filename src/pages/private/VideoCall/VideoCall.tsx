@@ -22,9 +22,20 @@ const VideoCall: React.FC = () => {
       iceServers: [
         {
           urls: ["stun:hk-turn1.xirsys.com"],
+          urls: ["stun:hk-turn1.xirsys.com"],
         },
         {
           username:
+            "t1v73xZPzrQUPUYowwXemStxpbhCDT3aafFfGTzjGMmsR929Wrjs20Ujnd5bBeiOAAAAAGdtFGt0aGFuaHB0MTExMA==",
+          credential: "d3e1521c-c363-11ef-8aef-0242ac120004",
+          urls: [
+            "turn:hk-turn1.xirsys.com:80?transport=udp",
+            "turn:hk-turn1.xirsys.com:3478?transport=udp",
+            "turn:hk-turn1.xirsys.com:80?transport=tcp",
+            "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+            "turns:hk-turn1.xirsys.com:443?transport=tcp",
+            "turns:hk-turn1.xirsys.com:5349?transport=tcp",
+          ],
             "t1v73xZPzrQUPUYowwXemStxpbhCDT3aafFfGTzjGMmsR929Wrjs20Ujnd5bBeiOAAAAAGdtFGt0aGFuaHB0MTExMA==",
           credential: "d3e1521c-c363-11ef-8aef-0242ac120004",
           urls: [
@@ -100,6 +111,11 @@ const VideoCall: React.FC = () => {
         conversationId,
         answer.sdp
       );
+      connection.invoke(
+        WEB_SOCKET_EVENT.SEND_ANSWER,
+        conversationId,
+        answer.sdp
+      );
 
       // Xử lý hàng đợi ICE candidates
       while (iceCandidatesQueue.current.length > 0) {
@@ -164,6 +180,11 @@ const VideoCall: React.FC = () => {
               conversationId,
               offer.sdp
             );
+            connection.invoke(
+              WEB_SOCKET_EVENT.SEND_OFFER,
+              conversationId,
+              offer.sdp
+            );
             console.log("Sent Offer:", offer.sdp);
           };
 
@@ -185,6 +206,7 @@ const VideoCall: React.FC = () => {
       .catch((error) => {
         if (error.name === "NotReadableError") {
           console.error("Device is already in use:", error);
+          alert("Microphone is already in use by another application.");
           alert("Microphone is already in use by another application.");
         } else {
           console.error("Error accessing media devices:", error);
