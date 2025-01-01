@@ -17,4 +17,5 @@ export type GetProfileDetailRES = {
   bio: string;
   dateOfBith: string;
   gender: string;
+  isFollowed: boolean;
 };

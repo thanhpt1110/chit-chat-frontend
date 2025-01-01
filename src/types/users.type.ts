@@ -12,3 +12,13 @@ export type UserRES = {
   email: string;
   phoneNumber: string;
 };
+
+export type RecommendUserRES = {
+  id: string;
+  userId: string;
+  user: {
+    id: string;
+    displayName: string;
+    avatarUrl: string;
+  };
+};

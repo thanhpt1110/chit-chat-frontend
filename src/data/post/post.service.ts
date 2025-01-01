@@ -25,7 +25,7 @@ export const getUserDTO = (data: UserRES): UserDTO => ({
 
 export const getPostDTO = (data: GetListPostRES): PostDTO => ({
   id: data.id,
-  postAt: new Date().getTime(),
+  postAt: data.createdOn * 1000,
   postUser: getUserDTO(data.userPosted),
   postImages: data.postMedias.map((media) => ({
     key: media.id,
@@ -34,7 +34,7 @@ export const getPostDTO = (data: GetListPostRES): PostDTO => ({
   likeCount: data.reactionCount,
   caption: data.description,
   commentCount: data.commentCount,
-  isLiked: false,
+  isLiked: data.isReacted,
 });
 
 export const getImageDTO = (data: PostMediaRES): ImageDTO => ({
@@ -45,20 +45,20 @@ export const getImageDTO = (data: PostMediaRES): ImageDTO => ({
 export const getCommentDTO = (data: CommentRES): CommentDTO => ({
   id: data.id,
   comment: data.content,
-  commentAt: Number(data.createdOn),
+  commentAt: data.createdOn * 1000,
   commentUser: getUserDTO(data.userPosted),
 });
 
 export const getPostDetailDTO = (data: GetPostDetailRES): PostDetailDTO => ({
   post: {
     id: data.id,
-    postAt: 1732428569000,
+    postAt: data.createdOn * 1000,
     postUser: getUserDTO(data.userPosted),
     postImages: data.postMedias.map((postImage) => getImageDTO(postImage)),
     likeCount: data.reactionCount,
     caption: data.description,
     commentCount: data.commentCount,
-    isLiked: false,
+    isLiked: data.isReacted,
   },
   comments: data.comments.map((comment) => getCommentDTO(comment)),
 });

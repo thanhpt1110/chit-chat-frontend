@@ -1,4 +1,5 @@
-import { ProfileDetailDTO } from "../../types/data.type";
+import { ProfileDetailDTO, UserDTO } from "../../types/data.type";
+import { RecommendUserRES } from "../../types/users.type";
 import { GetProfileDetailRES, GetProfileSearchRES } from "./profile.response";
 
 export type ProfileSearchDTO = {
@@ -33,4 +34,15 @@ export const getProfileDetailDTO = (
   postCount: 0,
   followerCount: 0,
   followingCount: 0,
+  isFollowed: data.isFollowed,
+});
+
+export const getRecommendUserDTO = (data: RecommendUserRES): UserDTO => ({
+  id: data.id,
+  username: data.user.displayName,
+  userDisplayName: data.user.displayName,
+  profileImage: {
+    key: data.user.avatarUrl,
+    url: data.user.avatarUrl,
+  },
 });

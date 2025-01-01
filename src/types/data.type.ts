@@ -78,6 +78,7 @@ export type ProfileDetailDTO = {
   followingCount: number;
   profileImage: ImageDTO;
   bio: string;
+  isFollowed: boolean;
 };
 
 export enum NOTIFICATION_TYPE {

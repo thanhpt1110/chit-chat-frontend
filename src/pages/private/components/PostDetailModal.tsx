@@ -1,15 +1,22 @@
 import SkeletonImage from "antd/es/skeleton/Image";
-import { useCallback, useState } from "react";
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { CommentOutlineIcon } from "../../../components/icons/CommentOutlineIcon";
+import { LikeFillIcon } from "../../../components/icons/LikeFillIcon";
+import { LikeOutLineIcon } from "../../../components/icons/LikeOutlineIcon";
 import { ShareOutlineIcon } from "../../../components/icons/ShareOutlineIcon";
 import ImageSlider from "../../../components/ImageSlider";
 import ImageWithFallback from "../../../components/ImageWithFallback";
 import { Modal } from "../../../components/Modal";
-import ToggleLike from "../../../components/ToggleLike";
 import ToggleSave from "../../../components/ToggleSave";
 import UserDisplayNameAndContent from "../../../components/UserDisplayNameAndContent";
 import UserNameDisplay from "../../../components/UserNameDisplay";
-import { useGetPostDetailQuery } from "../../../data/post/post.api";
+import {
+  useGetPostDetailQuery,
+  usePostCommentMutation,
+  usePutLikePostMutation,
+} from "../../../data/post/post.api";
 import { formatPostTime } from "../../../helpers/format/date-time.format";
 
 type PostDetailModalProps = {
@@ -26,11 +33,52 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
     skip: !postId,
   });
 
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(
+    postDetailData?.post.isLiked || false
+  );
+  const [likeCount, setLikeCount] = useState<number>(
+    postDetailData?.post.likeCount || 0
+  );
 
-  const handleToggleLike = useCallback(() => {}, []);
+  const [putToggleLike] = usePutLikePostMutation();
+
+  const handleToggleLike = useCallback(() => {
+    putToggleLike(postDetailData?.post.id || "")
+      .unwrap()
+      .then(() => {
+        setIsLiked((prev) => !prev);
+        setLikeCount((prev) => (prev += isLiked ? -1 : 1));
+      })
+      .catch(() => {
+        enqueueSnackbar("error", {
+          variant: "error",
+        });
+      });
+  }, [isLiked, postDetailData?.post.id, putToggleLike]);
 
   const handleToggleSave = useCallback(() => {}, []);
+
+  const [postNewComment] = usePostCommentMutation();
+
+  const [content, setContent] = useState<string>("");
+  const handleAddComment = useCallback(() => {
+    postNewComment({
+      postId: postId || "",
+      content: content,
+    })
+      .unwrap()
+      .then(() => {
+        setContent("");
+      })
+      .catch(() => {
+        enqueueSnackbar("Failed to add comment", { variant: "error" });
+      });
+  }, [content, postId, postNewComment]);
+
+  useEffect(() => {
+    setLikeCount(postDetailData?.post.likeCount || 0);
+    setIsLiked(postDetailData?.post.isLiked || false);
+  }, [postDetailData?.post.likeCount, postDetailData?.post.isLiked]);
 
   return (
     <div className="">
@@ -42,12 +90,7 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
         content={
           <>
             <div className="flex flex-row h-full justify-between bg-black">
-              <button
-                onDoubleClick={() => {
-                  setIsLiked((prev) => !prev);
-                  handleToggleLike();
-                }}
-              >
+              <button onDoubleClick={handleToggleLike}>
                 {!isLoading && !isFetching ? (
                   <>
                     {postDetailData && (
@@ -114,10 +157,8 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
                             content={comment.comment}
                             userAvatarUrl={comment.commentUser.profileImage.url}
                             children={
-                              <div className="flex flex-row text-sm">
-                                <span className="text-gray-400">
-                                  {formatPostTime(comment.commentAt)}
-                                </span>
+                              <div className="flex flex-row text-xs text-gray-400">
+                                {formatPostTime(comment.commentAt)}
                               </div>
                             }
                           />
@@ -127,11 +168,18 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
                     <div className="flex flex-col px-4">
                       <div className="flex flex-row justify-between">
                         <div className="flex flex-row justify-start gap-4 mt-1">
-                          <ToggleLike
-                            className="hover:opacity-50"
-                            likeControlFromParent={isLiked}
-                            handleToggleLike={handleToggleLike}
-                          />
+                          <button
+                            onClick={handleToggleLike}
+                            className={"hover:opacity-50"}
+                          >
+                            {isLiked ? (
+                              <LikeFillIcon
+                                className={twMerge("text-[#F0355B]")}
+                              />
+                            ) : (
+                              <LikeOutLineIcon className={twMerge("h-6 w-6")} />
+                            )}
+                          </button>
                           <CommentOutlineIcon className="cursor-pointer hover:opacity-50" />
                           <ShareOutlineIcon className="cursor-pointer hover:opacity-50" />
                         </div>
@@ -141,17 +189,27 @@ function PostDetailModal({ postId, onClose }: PostDetailModalProps) {
                         />
                       </div>
                       <div className="mt-2 font-bold">
-                        {postDetailData.post.likeCount} {"likes"}
+                        {likeCount} {"likes"}
                       </div>
                       <div>{formatPostTime(postDetailData.post.postAt)}</div>
                     </div>
                     <div className="flex flex-row border-t mt-4">
                       <input
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleAddComment();
+                          }
+                        }}
                         className="border-none px-4 py-2 focus:border-none focus:outline-none flex-1"
                         placeholder="Comment..."
                         type="text"
                       />
-                      <button className="pl-8 pr-4 py-4">
+                      <button
+                        onClick={handleAddComment}
+                        className="pl-8 pr-4 py-4"
+                      >
                         <ShareOutlineIcon className="text-gray-600" />
                       </button>
                     </div>

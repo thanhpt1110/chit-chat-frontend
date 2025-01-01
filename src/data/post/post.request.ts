@@ -10,3 +10,8 @@ export type CreatePostREQ = {
   Files: Blob[];
   Content: string;
 };
+
+export type AddCommentREQ = {
+  postId: string;
+  content: string;
+};

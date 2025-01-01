@@ -6,6 +6,14 @@ import {
 } from "@microsoft/signalr";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
+import { EndCallIcon } from "../../../components/icons/EndCallIcon";
+import { MicrophoneIcon } from "../../../components/icons/MicrophoneIcon";
+import { MicrophoneMutedIcon } from "../../../components/icons/MicrophoneMutedIcon";
+import { ShareScreenIcon } from "../../../components/icons/ShareScreenIcon";
+import { StopShareScreenIcon } from "../../../components/icons/StopShareScreenIcon";
+import { VideoCallIcon } from "../../../components/icons/VideoCallIcon";
+import { VideoCallMuteIcon } from "../../../components/icons/VideoCallMuteIcon";
 import { socketBaseUrl } from "../../../helpers/constants/configs.constant";
 import { WEB_SOCKET_EVENT } from "../../../helpers/constants/websocket-event.constant";
 
@@ -281,37 +289,66 @@ const VideoCall: React.FC = () => {
     }
   };
 
+  const toggleShareScreen = () => {
+    if (isScreenSharing) {
+      stopScreenShare();
+    } else {
+      startScreenShare();
+    }
+  };
+
   return (
-    <div>
-      <h1>Video Call - Conversation ID: {conversationId}</h1>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div>
-          <h3>Local Video</h3>
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="flex gap-4 mt-4">
+        <div className="flex flex-col justify-center items-center gap-4">
           <video
             ref={localVideoRef}
             autoPlay
             muted
-            style={{ width: "300px", background: "black" }}
+            className={twMerge(
+              "w-72 h-44 rounded-xl bg-black",
+              isCameraOn && "border-2 border-green-600"
+            )}
           />
+          <h3>Local Video</h3>
         </div>
-        <div>
-          <h3>Remote Video</h3>
+        <div className="flex flex-col justify-center items-center gap-4">
           <video
             ref={remoteVideoRef}
             autoPlay
-            style={{ width: "300px", background: "black" }}
+            className="border border-gray-300 w-72 h-44 rounded-xl bg-black"
           />
+          <h3>Remote Video</h3>
         </div>
       </div>
-      <div className="flex gap-4 mt-4">
-        <button onClick={toggleMute}>{isMuted ? "Mute" : "Unmute"}</button>
-        {isScreenSharing ? (
-          <button onClick={stopScreenShare}>Stop Screen Share</button>
-        ) : (
-          <button onClick={startScreenShare}>Share Screen</button>
-        )}
-        <button onClick={toggleCamera}>
-          {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
+      <div className="flex gap-4 mt-4 fixed bottom-8">
+        <button
+          className="w-16 h-16 rounded-full flex justify-center items-center shadow-circleButton"
+          onClick={toggleMute}
+        >
+          {isMuted ? <MicrophoneMutedIcon /> : <MicrophoneIcon />}
+        </button>
+
+        <button
+          className="w-16 h-16 rounded-full flex justify-center items-center shadow-circleButton"
+          onClick={toggleShareScreen}
+        >
+          {isScreenSharing ? <StopShareScreenIcon /> : <ShareScreenIcon />}
+        </button>
+
+        <button
+          className="w-16 h-16 rounded-full flex justify-center items-center shadow-circleButton"
+          onClick={toggleCamera}
+        >
+          {isCameraOn ? <VideoCallIcon /> : <VideoCallMuteIcon />}
+        </button>
+        <button
+          onClick={() => {
+            window.close();
+          }}
+          className="w-16 h-16 rounded-full flex justify-center items-center bg-red-700 shadow-circleButton"
+        >
+          <EndCallIcon className="text-white h-24 w-24" />
         </button>
       </div>
     </div>

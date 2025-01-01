@@ -85,6 +85,11 @@ function LoginPage() {
                   className="focus:outline-none bg-transparent w-full"
                   placeholder="Enter your password"
                   type="password"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(onLogin)();
+                    }
+                  }}
                 />
               )}
             />

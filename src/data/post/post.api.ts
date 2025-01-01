@@ -3,6 +3,7 @@ import {
   TAG_TYPES,
 } from "../../helpers/constants/common.constant";
 import { GET_POST_HOME_PAGE_SIZE } from "../../pages/private/HomePage/HomePage";
+import { GET_POST_PROFILE_PAGE_SIZE } from "../../pages/private/ProfilePage/ProfilePage";
 import {
   BaseResponse,
   PaginationDTO,
@@ -18,7 +19,7 @@ const postApi = usersApi.injectEndpoints({
   endpoints: (build) => ({
     getPosts: build.query<PaginationDTO<PostDTO>, GetListPostREQ>({
       query: (params) => ({
-        url: `/Post`,
+        url: `/Post/reccomendation`,
         method: HTTP_METHOD.GET,
         params,
       }),
@@ -69,6 +70,7 @@ const postApi = usersApi.injectEndpoints({
       }),
       transformResponse: (response: BaseResponse<GetPostDetailRES>) =>
         getPostDetailDTO(response.result),
+      providesTags: (result, error, id) => [{ type: TAG_TYPES.POST, id: id }],
     }),
     putLikePost: build.mutation<void, string>({
       query: (id: string) => ({
@@ -86,6 +88,38 @@ const postApi = usersApi.injectEndpoints({
         },
       ],
     }),
+    getUserPosts: build.query<PaginationDTO<PostDTO>, GetListPostREQ>({
+      query: (params) => ({
+        url: `/Post`,
+        method: HTTP_METHOD.GET,
+        params,
+      }),
+      transformResponse: (response: BaseResponse<GetListPostRES[]>) => {
+        return {
+          data: response.result.map((post) => getPostDTO(post)),
+          isLastPage: response.result.length < GET_POST_PROFILE_PAGE_SIZE,
+        };
+      },
+      providesTags: [
+        {
+          type: TAG_TYPES.POST,
+          id: "LIST",
+        },
+      ],
+    }),
+    postComment: build.mutation<void, { postId: string; content: string }>({
+      query: ({ postId, content }) => ({
+        url: `/Post/${postId}/comments`,
+        method: HTTP_METHOD.POST,
+        body: { content },
+      }),
+      invalidatesTags: (result, error, { postId }) => [
+        {
+          type: TAG_TYPES.POST,
+          id: postId,
+        },
+      ],
+    }),
   }),
 });
 
@@ -94,4 +128,6 @@ export const {
   useCreatePostMutation,
   useGetPostDetailQuery,
   usePutLikePostMutation,
+  useGetUserPostsQuery,
+  usePostCommentMutation,
 } = postApi;

@@ -19,4 +19,9 @@ export const APP_ROUTE = {
     VIDEO: (conversationId: string) =>
       `${ROUTE_NAME.MAIN}/video/${conversationId}`,
   },
+
+  FULL_SCREEN: {
+    VIDEO: (conversationId: string) =>
+      `${ROUTE_NAME.MAIN}/video/${conversationId}`,
+  },
 };

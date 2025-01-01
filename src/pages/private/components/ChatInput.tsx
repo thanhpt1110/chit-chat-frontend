@@ -30,6 +30,12 @@ function ChatInput({ conversationId }: ChatInputProps) {
   return (
     <div className="flex flex-row px-4 py-4 gap-3">
       <input
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleAddMessage();
+          }
+        }}
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         className="w-full pl-8 py-2 focus:outline-none rounded-3xl border"
