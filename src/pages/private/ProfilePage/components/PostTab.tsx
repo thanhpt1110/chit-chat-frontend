@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { CameraFillIcon } from "../../../../components/icons/CameraFillIcon";
-import { generateExploreData } from "../../../../data/mocks/explore.mock";
-import { ExploreItemInListDTO } from "../../../../types/data.type";
+import { PostDTO } from "../../../../types/data.type";
 import ExploreCard from "../../components/ExploreCard";
 import PostDetailModal from "../../components/PostDetailModal";
 
-const USER_POST_DATA: ExploreItemInListDTO[] = generateExploreData(20);
+type PostTabProps = {
+  data?: PostDTO[];
+};
 
-function PostTab() {
+function PostTab({ data }: PostTabProps) {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   return (
     <div className="w-full flex justify-center">
       <div className="flex flex-col items-center">
-        {USER_POST_DATA.length === 0 && (
+        {data?.length === 0 && (
           <>
             <div className="border mt-16 border-gray-600 w-max h-max px-4 py-4 rounded-full">
               <CameraFillIcon className="h-8 w-8 text-gray-600" />
@@ -30,15 +31,20 @@ function PostTab() {
           </>
         )}
         <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-2">
-          {USER_POST_DATA.map((item) => (
+          {data?.map((item) => (
             <button
               className="overflow-hidden w-56 h-56"
-              key={item.postId}
+              key={item.id}
               onClick={() => {
-                setSelectedPostId(item.postId);
+                setSelectedPostId(item.id);
               }}
             >
-              <ExploreCard {...item} />
+              <ExploreCard
+                postId={item.id}
+                postImage={item.postImages[0]}
+                likeCount={item.likeCount}
+                commentCount={item.commentCount}
+              />
             </button>
           ))}
           <PostDetailModal

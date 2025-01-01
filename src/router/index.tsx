@@ -41,11 +41,11 @@ export const router = createBrowserRouter([
             path: APP_ROUTE.MAIN.SEARCH_POST,
             element: <SearchPostPage />,
           },
-          {
-            path: APP_ROUTE.MAIN.VIDEO(":conversationId"),
-            element: <VideoCall />,
-          },
         ],
+      },
+      {
+        path: APP_ROUTE.FULL_SCREEN.VIDEO(":conversationId"),
+        element: <VideoCall />,
       },
     ],
   },

@@ -1,13 +1,15 @@
 import { enqueueSnackbar } from "notistack";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { usePutLikePostMutation } from "../data/post/post.api";
 import { formatPostTime } from "../helpers/format/date-time.format";
 import { PostDTO } from "../types/data.type";
 import { CommentOutlineIcon } from "./icons/CommentOutlineIcon";
+import { LikeFillIcon } from "./icons/LikeFillIcon";
+import { LikeOutLineIcon } from "./icons/LikeOutlineIcon";
 import { ShareOutlineIcon } from "./icons/ShareOutlineIcon";
 import ImageSlider from "./ImageSlider";
 import ImageWithFallback from "./ImageWithFallback";
-import ToggleLike from "./ToggleLike";
 import ToggleSave from "./ToggleSave";
 import UserNameDisplay from "./UserNameDisplay";
 
@@ -17,6 +19,7 @@ type PostCardProps = {
 };
 function PostCard({ postData, onCommentClick }: PostCardProps) {
   const [isLiked, setIsLiked] = useState<boolean>(postData.isLiked);
+  const [likeCount, setLikeCount] = useState<number>(postData.likeCount);
 
   const [putToggleLike] = usePutLikePostMutation();
 
@@ -24,16 +27,20 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
     putToggleLike(postData.id)
       .unwrap()
       .then(() => {
-        enqueueSnackbar("success liked", {
-          variant: "success",
-        });
+        setIsLiked((prev) => !prev);
+        setLikeCount((prev) => (prev += isLiked ? -1 : 1));
       })
       .catch(() => {
         enqueueSnackbar("error", {
           variant: "error",
         });
       });
-  }, [postData.id, putToggleLike]);
+  }, [isLiked, postData.id, putToggleLike]);
+
+  useEffect(() => {
+    setIsLiked(postData.isLiked);
+    setLikeCount(postData.likeCount);
+  }, [postData.isLiked, postData.likeCount]);
 
   const handleToggleSave = useCallback(() => {}, []);
   return (
@@ -55,13 +62,7 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
         </div>
         <div></div>
       </div>
-      <div
-        className="cursor-pointer"
-        onDoubleClick={() => {
-          setIsLiked((prev) => !prev);
-          handleToggleLike();
-        }}
-      >
+      <div className="cursor-pointer" onDoubleClick={handleToggleLike}>
         <ImageSlider
           className="max-w-[400px] "
           images={postData.postImages.map((image) => image.url)}
@@ -69,11 +70,13 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
       </div>
       <div className="flex flex-row justify-between">
         <div className="flex flex-row justify-start gap-4 mt-1">
-          <ToggleLike
-            className="hover:opacity-50"
-            likeControlFromParent={isLiked}
-            handleToggleLike={handleToggleLike}
-          />
+          <button onClick={handleToggleLike} className={"hover:opacity-50"}>
+            {isLiked ? (
+              <LikeFillIcon className={twMerge("text-[#F0355B]")} />
+            ) : (
+              <LikeOutLineIcon className={twMerge("h-6 w-6")} />
+            )}
+          </button>
           <button onClick={onCommentClick}>
             <CommentOutlineIcon className="cursor-pointer hover:opacity-50" />
           </button>
@@ -85,7 +88,7 @@ function PostCard({ postData, onCommentClick }: PostCardProps) {
         />
       </div>
       <div>
-        {postData.likeCount} {"likes"}
+        {likeCount} {"likes"}
       </div>
       <div className="flex flex-row gap-2 items-start max-w-[400px]">
         <UserNameDisplay

@@ -1,49 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import PostCard from "../../../components/PostCard";
-import UserSummarySuggestCard, {
-  UserSuggestData,
-} from "../../../components/UserSummarySuggestCard";
+import UserSummarySuggestCard from "../../../components/UserSummarySuggestCard";
 import { GlobalState } from "../../../data/global/global.slice";
 import { useGetPostsQuery } from "../../../data/post/post.api";
 import { GetListPostREQ } from "../../../data/post/post.request";
+import { useGetRecommendUsersQuery } from "../../../data/profile/profile.api";
+import { APP_ROUTE } from "../../../helpers/constants/route.constant";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import { useBreakpoint } from "../../../hooks/useBreakPoint";
 import { PostDTO } from "../../../types/data.type";
 import PostDetailModal from "../components/PostDetailModal";
-
-const NEW_PEOPLE_SUGGESTED_DATA: UserSuggestData[] = [
-  {
-    id: "1",
-    avatarUrl: "https://i.pinimg.com",
-    username: "user1",
-    summarySuggestContent: "Suggest 1",
-  },
-  {
-    id: "2",
-    avatarUrl: "https://i.pinimg.com",
-    username: "user2",
-    summarySuggestContent: "Suggest 2",
-  },
-  {
-    id: "3",
-    avatarUrl: "https://i.pinimg.com",
-    username: "user3",
-    summarySuggestContent: "Suggest 3",
-  },
-  {
-    id: "4",
-    avatarUrl: "https://i.pinimg.com",
-    username: "user4",
-    summarySuggestContent: "Suggest 4",
-  },
-  {
-    id: "5",
-    avatarUrl: "https://i.pinimg.com",
-    username: "user5",
-    summarySuggestContent: "Suggest 5",
-  },
-];
 
 export const GET_POST_HOME_PAGE_SIZE = 3;
 
@@ -109,7 +77,14 @@ function HomePage() {
         return [...prev, ...newPosts];
       });
     }
-  }, [postData]);
+  }, [postData, postData?.data]);
+
+  const { data: recommendUsers } = useGetRecommendUsersQuery({
+    PageIndex: 0,
+    PageSize: 5,
+  });
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -154,12 +129,17 @@ function HomePage() {
               {"View alls"}
             </button>
           </div>
-          {NEW_PEOPLE_SUGGESTED_DATA.map((userSuggestData) => (
+          {recommendUsers?.map((userSuggestData) => (
             <UserSummarySuggestCard
               key={userSuggestData.username}
-              actionLabel={"Follow"}
-              onActionClick={() => {}}
-              {...userSuggestData}
+              actionLabel={"View"}
+              onActionClick={() => {
+                navigate(APP_ROUTE.MAIN.PROFILE(userSuggestData.id));
+              }}
+              avatarUrl={userSuggestData.profileImage.url}
+              username={userSuggestData.username}
+              summarySuggestContent={"Suggest"}
+              id={userSuggestData.id}
             />
           ))}
           <PostDetailModal

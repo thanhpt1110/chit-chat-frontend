@@ -16,7 +16,7 @@ export type PostMediaRES = {
 export type CommentRES = {
   id: string;
   isDeleted: boolean;
-  createdOn: string;
+  createdOn: number;
   content: string;
   reactionCount: number;
   userPosted: UserRES;
@@ -30,6 +30,8 @@ export type GetListPostRES = {
   commentCount: number;
   comments: CommentRES[];
   userPosted: UserRES;
+  createdOn: number;
+  isReacted: boolean;
 };
 
 export type GetPostDetailRES = GetListPostRES;
