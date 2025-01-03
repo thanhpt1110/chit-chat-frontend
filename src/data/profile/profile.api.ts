@@ -54,6 +54,36 @@ const profileApi = usersApi.injectEndpoints({
         return response.result.map((user) => getRecommendUserDTO(user));
       },
     }),
+    getFollowers: build.query<UserDTO[], string>({
+      query: (userId: string) => ({
+        url: `/Profile/${userId}/followers`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response: BaseResponse<RecommendUserRES[]>) => {
+        return response.result.map((user) => getRecommendUserDTO(user));
+      },
+      providesTags: (result, error, id) => [
+        {
+          type: TAG_TYPES.PROFILE,
+          id,
+        },
+      ],
+    }),
+    getFollowings: build.query<UserDTO[], string>({
+      query: (userId: string) => ({
+        url: `/Profile/${userId}/followings`,
+        method: HTTP_METHOD.GET,
+      }),
+      transformResponse: (response: BaseResponse<RecommendUserRES[]>) => {
+        return response.result.map((user) => getRecommendUserDTO(user));
+      },
+      providesTags: (result, error, id) => [
+        {
+          type: TAG_TYPES.PROFILE,
+          id,
+        },
+      ],
+    }),
   }),
 });
 
@@ -62,4 +92,6 @@ export const {
   useGetProfileDetailQuery,
   useToggleFollowMutation,
   useGetRecommendUsersQuery,
+  useGetFollowersQuery,
+  useGetFollowingsQuery,
 } = profileApi;

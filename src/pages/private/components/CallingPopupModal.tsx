@@ -1,22 +1,19 @@
 import { twMerge } from "tailwind-merge";
-import Show from "./condition/Show";
-import { XIcon } from "./icons/XIcon";
+import { XIcon } from "../../../components/icons/XIcon";
 
-type ModalProps = {
+type CallingPopUpModalProps = {
   isOpen: boolean;
   onClose: () => void;
   content: React.ReactNode;
   className?: string;
-  hideXIcon?: boolean;
 };
 
-export function Modal({
+export function CallingPopUpModal({
   isOpen,
   onClose,
   content,
   className,
-  hideXIcon = false,
-}: ModalProps) {
+}: CallingPopUpModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -31,14 +28,12 @@ export function Modal({
         >
           {content}
         </div>
-        <Show when={!hideXIcon}>
-          <button
-            className="absolute text-xl top-8 right-8 text-white hover:text-gray-300"
-            onClick={onClose}
-          >
-            <XIcon className="text-white h-6 w-6" />
-          </button>
-        </Show>
+        <button
+          className="absolute text-xl top-8 right-8 text-white hover:text-gray-300"
+          onClick={onClose}
+        >
+          <XIcon className="text-white h-6 w-6" />
+        </button>
       </div>
     </div>
   );

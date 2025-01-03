@@ -7,6 +7,8 @@ import Tabs, { Tab } from "../../../components/Tabs";
 import { GlobalState } from "../../../data/global/global.slice";
 import { useGetUserPostsQuery } from "../../../data/post/post.api";
 import {
+  useGetFollowersQuery,
+  useGetFollowingsQuery,
   useGetProfileDetailQuery,
   useToggleFollowMutation,
 } from "../../../data/profile/profile.api";
@@ -69,6 +71,14 @@ function ProfilePage() {
       });
   };
 
+  const { data: userFollowers } = useGetFollowersQuery(id || "0", {
+    skip: !id,
+  });
+
+  const { data: userFollowings } = useGetFollowingsQuery(id || "0", {
+    skip: !id,
+  });
+
   return (
     <div className="flex w-full h-full justify-center overflow-auto">
       <div className="max-w-5xl flex flex-col">
@@ -109,13 +119,13 @@ function ProfilePage() {
               </div>
               <div className="flex flex-row gap-1">
                 <span className="font-semibold">
-                  {userDetailData?.followerCount}
+                  {userFollowers?.length || 0}
                 </span>
                 Followers
               </div>
               <div className="flex flex-row gap-1">
                 <span className="font-semibold">
-                  {userDetailData?.followingCount}
+                  {userFollowings?.length || 0}
                 </span>
                 Followings
               </div>

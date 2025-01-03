@@ -4,13 +4,21 @@ import { InfoFillIcon } from "../../../components/icons/InfoFillIcon";
 import { PhoneCallOutlineIcon } from "../../../components/icons/PhoneCallOutlineIcon";
 import { VideoCallOutlineIcon } from "../../../components/icons/VideoCallOutlineIcon";
 import ImageWithFallback from "../../../components/ImageWithFallback";
-import { useGetConversationDetailQuery } from "../../../data/conversation/conversation.api";
+import { Modal } from "../../../components/Modal";
+import {
+  useGetConversationDetailQuery,
+  useLazyGetConversationInformationQuery,
+} from "../../../data/conversation/conversation.api";
 import { MessageRES } from "../../../data/conversation/conversation.res";
 import { GlobalState } from "../../../data/global/global.slice";
 import { WEB_SOCKET_EVENT } from "../../../helpers/constants/websocket-event.constant";
 import { getActiveTime } from "../../../helpers/format/date-time.format";
 import { useAppSelector } from "../../../hooks/reduxHooks";
-import { ConversationDTO, UserDTO } from "../../../types/data.type";
+import {
+  ConversationDTO,
+  ConversationInformationDTO,
+  UserDTO,
+} from "../../../types/data.type";
 import ChatInput from "./ChatInput";
 import ConversationInfoExpanded from "./ConversationInfoExpanded";
 import Message from "./Message";
@@ -93,6 +101,8 @@ function Conversation({
 
   // handle read message
 
+  const [getConversationInformation] = useLazyGetConversationInformationQuery();
+
   useEffect(() => {
     connection?.on(WEB_SOCKET_EVENT.NEW_MESSAGE, (message: MessageRES) => {
       if (message.senderId === chatter.id) {
@@ -101,11 +111,30 @@ function Conversation({
         handleSendMessage(message);
       }
     });
+    connection?.on(WEB_SOCKET_EVENT.RECEIVE_CALL, (conversationId: string) => {
+      getConversationInformation(conversationId)
+        .unwrap()
+        .then((res) => {
+          setVideoCallInfo(res);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    });
 
     return () => {
       connection?.off(WEB_SOCKET_EVENT.NEW_MESSAGE, handleReceiveMessage);
     };
-  }, [chatter.id, connection, handleReceiveMessage, handleSendMessage]);
+  }, [
+    chatter.id,
+    connection,
+    getConversationInformation,
+    handleReceiveMessage,
+    handleSendMessage,
+  ]);
+
+  const [videoCallInfo, setVideoCallInfo] =
+    useState<ConversationInformationDTO | null>(null);
 
   return (
     <div className="w-full h-full flex flex-row ">
@@ -133,6 +162,7 @@ function Conversation({
               onClick={() => {
                 const videoCallUrl = `/video/${conversationId}`;
                 window.open(videoCallUrl, "_blank", "width=800,height=600");
+                connection?.invoke(WEB_SOCKET_EVENT.START_CALL, conversationId);
               }}
             >
               <VideoCallOutlineIcon />
@@ -188,6 +218,70 @@ function Conversation({
 
         {/* Chat Input */}
         <ChatInput conversationId={conversationId} />
+        {/* <Modal
+          open={videoCallInfo !== null}
+          onClose={() => setVideoCallInfo(null)}
+          okText={
+            <button
+              className="bg-green-700 text-white px-4 py-2 rounded-md"
+              onClick={() => {
+                setVideoCallInfo(null);
+                window.open(
+                  `/video/${videoCallInfo?.conversationId}`,
+                  "_blank",
+                  "width=800,height=600"
+                );
+              }}
+            >
+              Accept
+            </button>
+          }
+        ></Modal> */}
+        <Modal
+          hideXIcon
+          className="w-96 h-96"
+          isOpen={videoCallInfo !== null}
+          onClose={() => {
+            setVideoCallInfo(null);
+          }}
+          content={
+            <div className="flex flex-col justify-center items-center bg-white shadow-lg py-8 px-4 rounded-3xl">
+              <ImageWithFallback
+                src={videoCallInfo?.chatter.profileImage.url || ""}
+                alt="avatar"
+                className="h-24 w-24 rounded-full"
+              />
+              <div className="text-black text-lg font-medium mt-4">
+                {videoCallInfo?.chatter.userDisplayName} is calling you!
+              </div>
+              <p className="text-black">Do you want to join the video call?</p>
+              <div className="flex gap-4 mt-8">
+                <button
+                  className="bg-red-600 font-medium text-white px-6 py-3 rounded-xl"
+                  onClick={() => {
+                    setVideoCallInfo(null);
+                  }}
+                >
+                  Decline
+                </button>
+
+                <button
+                  className="bg-green-700 font-medium text-white px-6 py-3 rounded-xl"
+                  onClick={() => {
+                    setVideoCallInfo(null);
+                    window.open(
+                      `/video/${videoCallInfo?.conversationId}`,
+                      "_blank",
+                      "width=800,height=600"
+                    );
+                  }}
+                >
+                  Accept
+                </button>
+              </div>
+            </div>
+          }
+        />
       </div>
       <ConversationInfoExpanded isShow={isShowConversationInfoExpanded} />
     </div>

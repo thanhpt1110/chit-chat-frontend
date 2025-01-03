@@ -6,6 +6,7 @@ import {
 import {
   BaseResponse,
   ConversationDTO,
+  ConversationInformationDTO,
   PaginationDTO,
 } from "../../types/data.type";
 import { usersApi } from "../usersApi.api";
@@ -76,6 +77,28 @@ const conversationApi = usersApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: TAG_TYPES.CONVERSATION_LIST }],
     }),
+    getConversationInformation: build.query<ConversationInformationDTO, string>(
+      {
+        query: (conversationId: string) => ({
+          url: `/Conversation/${conversationId}`,
+          method: HTTP_METHOD.GET,
+        }),
+        transformResponse: (
+          response: BaseResponse<GetConversationDetailRES>
+        ) => ({
+          conversationId: response.result.id,
+          chatter: {
+            id: response.result.userReceivers[0].id,
+            username: response.result.userReceivers[0].displayName,
+            userDisplayName: response.result.userReceivers[0].displayName,
+            profileImage: {
+              key: response.result.userReceivers[0].avatarUrl,
+              url: response.result.userReceivers[0].avatarUrl,
+            },
+          },
+        }),
+      }
+    ),
   }),
 });
 
@@ -83,4 +106,5 @@ export const {
   useGetConversationListQuery,
   useGetConversationDetailQuery,
   usePostAddNewMessageMutation,
+  useLazyGetConversationInformationQuery,
 } = conversationApi;
