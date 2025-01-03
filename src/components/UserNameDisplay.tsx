@@ -6,11 +6,20 @@ type UserNameDisplayProps = {
   id: string;
   username: string;
   className?: string;
+  onSideEffect?: () => void;
 };
 
-function UserNameDisplay({ id, username, className }: UserNameDisplayProps) {
+function UserNameDisplay({
+  id,
+  username,
+  className,
+  onSideEffect,
+}: UserNameDisplayProps) {
   const navigate = useNavigate();
   const handleNavigateToUserProfile = () => {
+    if (onSideEffect) {
+      onSideEffect();
+    }
     navigate(APP_ROUTE.MAIN.PROFILE(id));
   };
 

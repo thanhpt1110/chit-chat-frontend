@@ -1,5 +1,5 @@
 import { enqueueSnackbar } from "notistack";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import ActionButton from "../../../components/ActionButton";
 import ImageWithFallback from "../../../components/ImageWithFallback";
@@ -13,6 +13,7 @@ import {
   useToggleFollowMutation,
 } from "../../../data/profile/profile.api";
 import { useAppSelector } from "../../../hooks/reduxHooks";
+import FollowModal from "./components/FollowModal";
 import PostTab from "./components/PostTab";
 import SavedTab from "./components/SavedTab";
 import TaggedTab from "./components/TaggedTab";
@@ -79,6 +80,9 @@ function ProfilePage() {
     skip: !id,
   });
 
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+  const [isFollowingsModalOpen, setIsFollowingsModalOpen] = useState(false);
+
   return (
     <div className="flex w-full h-full justify-center overflow-auto">
       <div className="max-w-5xl flex flex-col">
@@ -117,18 +121,28 @@ function ProfilePage() {
                 <span className="font-semibold">{userPosts?.data.length}</span>{" "}
                 Posts
               </div>
-              <div className="flex flex-row gap-1">
+              <button
+                onClick={() => {
+                  setIsFollowersModalOpen(true);
+                }}
+                className="flex flex-row gap-1"
+              >
                 <span className="font-semibold">
                   {userFollowers?.length || 0}
                 </span>
                 Followers
-              </div>
-              <div className="flex flex-row gap-1">
+              </button>
+              <button
+                onClick={() => {
+                  setIsFollowingsModalOpen(true);
+                }}
+                className="flex flex-row gap-1"
+              >
                 <span className="font-semibold">
                   {userFollowings?.length || 0}
                 </span>
                 Followings
-              </div>
+              </button>
             </div>
             {userDetailData && (
               <>
@@ -138,6 +152,22 @@ function ProfilePage() {
                 <div>{userDetailData.bio}</div>
               </>
             )}
+            <FollowModal
+              isOpen={isFollowersModalOpen}
+              data={userFollowers || []}
+              onClose={() => {
+                setIsFollowersModalOpen(false);
+              }}
+              title="Followers"
+            />
+            <FollowModal
+              isOpen={isFollowingsModalOpen}
+              data={userFollowings || []}
+              onClose={() => {
+                setIsFollowingsModalOpen(false);
+              }}
+              title="Followings"
+            />
           </div>
         </div>
         <div className="mt-16">
