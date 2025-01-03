@@ -14,9 +14,9 @@ import {
 } from "./post.response";
 
 export const getUserDTO = (data: UserRES): UserDTO => ({
-  id: data.id,
+  id: data.id || "",
   userDisplayName: data.displayName,
-  username: "@username",
+  username: data.displayName,
   profileImage: {
     key: data.avatarUrl,
     url: data.avatarUrl,

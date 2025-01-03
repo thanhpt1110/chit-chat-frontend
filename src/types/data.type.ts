@@ -95,3 +95,8 @@ export type NotificationDTO = {
   isRead: boolean;
   notificationContent: string;
 };
+
+export type ConversationInformationDTO = {
+  conversationId: string;
+  chatter: UserDTO;
+};

@@ -299,24 +299,30 @@ const VideoCall: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <div className="flex gap-4 mt-4">
-        <div className="flex flex-col justify-center items-center gap-4">
+      <div className="flex max-w-7xl w-full gap-4 mt-4">
+        <div className="flex flex-1 flex-col justify-center items-center gap-4">
           <video
             ref={localVideoRef}
             autoPlay
             muted
             className={twMerge(
-              "w-72 h-44 rounded-xl bg-black",
+              "w-full rounded-xl bg-black",
               isCameraOn && "border-2 border-green-600"
             )}
+            style={{
+              aspectRatio: "16/9",
+            }}
           />
           <h3>Local Video</h3>
         </div>
-        <div className="flex flex-col justify-center items-center gap-4">
+        <div className="flex flex-1 flex-col justify-center items-center gap-4">
           <video
+            style={{
+              aspectRatio: "16/9",
+            }}
             ref={remoteVideoRef}
             autoPlay
-            className="border border-gray-300 w-72 h-44 rounded-xl bg-black"
+            className="border border-gray-300 w-full rounded-xl bg-black"
           />
           <h3>Remote Video</h3>
         </div>
