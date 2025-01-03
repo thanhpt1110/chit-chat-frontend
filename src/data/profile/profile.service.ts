@@ -38,7 +38,7 @@ export const getProfileDetailDTO = (
 });
 
 export const getRecommendUserDTO = (data: RecommendUserRES): UserDTO => ({
-  id: data.id,
+  id: data.userId,
   username: data.user.displayName,
   userDisplayName: data.user.displayName,
   profileImage: {

@@ -42,7 +42,10 @@ const profileApi = usersApi.injectEndpoints({
         url: `/Profile/toggle-follow/${id}`,
         method: HTTP_METHOD.PUT,
       }),
-      invalidatesTags: (result, error, id) => [{ type: TAG_TYPES.PROFILE, id }],
+      invalidatesTags: (result, error, id) => [
+        { type: TAG_TYPES.PROFILE, id },
+        { type: TAG_TYPES.RECOMMENDATION_USER, id: "LIST" },
+      ],
     }),
     getRecommendUsers: build.query<UserDTO[], GetRecommendUserREQ>({
       query: (params) => ({
@@ -53,6 +56,12 @@ const profileApi = usersApi.injectEndpoints({
       transformResponse: (response: BaseResponse<RecommendUserRES[]>) => {
         return response.result.map((user) => getRecommendUserDTO(user));
       },
+      providesTags: [
+        {
+          type: TAG_TYPES.RECOMMENDATION_USER,
+          id: "LIST",
+        },
+      ],
     }),
     getFollowers: build.query<UserDTO[], string>({
       query: (userId: string) => ({
